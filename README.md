@@ -4,6 +4,7 @@ Based on work of [TioRuben](https://github.com/TioRuben). WIP.
 
 ## Changes:
 
+ - Portrait orientation.
  - User interface: submenus support added. Long touch for enter and action, single touch for next option.
  - OTA page: added wristband IP and remaining time.
  - Bearing and temperature on same page.
