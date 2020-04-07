@@ -1,3 +1,5 @@
+#pragma once
+
 #include <Arduino.h>
 #include <EasyButton.h>
 #include "wristband-tft.hpp"
@@ -13,3 +15,5 @@ void showPage();
 void handleSleep(bool showMsg = true);
 void initButton();
 void handleAction();
+void handlePress();
+uint8_t getTimeout();

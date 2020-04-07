@@ -9,12 +9,15 @@ bool colonUTC = true;
 uint16_t colonXUTC = 0;
 uint8_t oldMinuteUTC = 99;
 uint8_t oldDayUTC = 99;
+float oldVoltage = 10;
+
+bool appointmentsUpdated = true; // TODO
 
 void pageClock(bool initialLoad)
 {
   RTC_Date current;
-  if (initialLoad)
-  {
+  float voltage;
+  if (initialLoad) {
     deactivateWifi();
     clearScreen();
     current = getClockTime();
@@ -23,6 +26,11 @@ void pageClock(bool initialLoad)
     oldMinute = current.minute;
     oldDay = current.day;
     clockRefresh = millis();
+    voltage = getVoltage();
+    displayBatteryValue(voltage, calcPercentage(voltage), isCharging());
+    drawBottomBar(calcPercentage(voltage), 0);
+    oldVoltage = voltage;
+    displayAppointments();
   }
   else if (millis() - clockRefresh > 1000)
   {
@@ -36,10 +44,18 @@ void pageClock(bool initialLoad)
     }
     if (oldDay != current.day)
     {
-      displayDate(current.day, current.month, current.year, false);
+        displayAppointments();
+        displayDate(current.day, current.month, current.year, false);
     }
     oldMinute = current.minute;
     oldDay = current.day;
+    voltage = getVoltage();
+    if (voltage != oldVoltage) {
+        displayBatteryValue(voltage, calcPercentage(voltage), isCharging());
+        drawBottomBar(calcPercentage(voltage), 0);
+    }
+    if (appointmentsUpdated) { displayAppointments(); appointmentsUpdated = false; }
+    oldVoltage = voltage;
   }
 }
 

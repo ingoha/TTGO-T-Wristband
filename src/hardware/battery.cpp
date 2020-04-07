@@ -2,6 +2,28 @@
 
 int vref = 1100;
 
+struct voltagePoint {
+    float max;
+    uint8_t per;
+};
+
+voltagePoint batteryCurve[] = {
+    { 4.20, 100 },
+    { 4.12, 97 },
+    { 4.10, 95 },
+    { 4.05, 90 },
+    { 3.95, 80 },
+    { 3.82, 60 },
+    { 3.75, 40 },
+    { 3.68, 20 },
+    { 3.60, 10 },
+    { 3.48, 5 },
+    { 3.30, 2 },
+    { 3.00, 0 },
+    { 0.00, 0 },
+};
+
+
 void setupADC()
 {
   esp_adc_cal_characteristics_t adc_chars;
@@ -25,18 +47,23 @@ float getVoltage()
   return battery_voltage;
 }
 
-uint8_t calcPercentage(float volts)
-{
-  float percentage = (volts - BATTERY_MIN_V) * 100 / (BATTERY_MAX_V - BATTERY_MIN_V);
-  if (percentage > 100)
-  {
-    percentage = 100;
+uint8_t calcPercentage(float voltage) {
+  // float percentage = (volts - BATTERY_MIN_V) * 100 / (BATTERY_MAX_V - BATTERY_MIN_V);
+  if (voltage >= 4.2) { return 100; }
+  if (voltage <= 3.0) { return 0; }
+  for (uint8_t i = 0; batteryCurve[i].max > 0; i++) {
+      if (voltage >= batteryCurve[i].max) {
+          float max = batteryCurve[i].max; uint8_t per = batteryCurve[i].per;
+          float vr = batteryCurve[i > 0 ? (i-1) : 0].max - max;
+          float vp = (voltage - max) / vr;
+          uint8_t pr = batteryCurve[i > 0 ? (i-1) : 0].per - per;
+          float pp = per + pr * vp;
+          if (pp > 100) { return 100; }
+          if (pp < 0) { return 0; }
+          return (uint8_t)pp;
+      }
   }
-  if (percentage < 0)
-  {
-    percentage = 0;
-  }
-  return (uint8_t)percentage;
+  return 0;
 }
 
 void updateBatteryChargeStatus()

@@ -8,11 +8,15 @@ void pageBearing(bool initialLoading)
   {
     deactivateWifi();
     initDrawBearing();
+    initDrawTemperature();
+    initMPU();
   }
   if (millis() - timeBearing > 300)
   {
     refreshDrawBearing(getBearing());
     timeBearing = millis();
+    float temperature = getTemperature();
+    refreshDrawTemperature(temperature);
   }
 }
 

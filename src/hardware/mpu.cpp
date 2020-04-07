@@ -3,6 +3,9 @@
 
 MPU9250 IMU;
 
+float aBias[3]; float gBias[3]; float mCal[3];
+uint32_t lastUpdate = 0;
+
 void initMPU()
 {
   byte c = IMU.readByte(MPU9250_ADDRESS, WHO_AM_I_MPU9250);
@@ -13,6 +16,32 @@ void initMPU()
     getMagBiasEEPROM(IMU.magbias);
   }
 }
+
+void updateMPU() {
+    int16_t aData[3];
+    IMU.getAres(); IMU.readAccelData(aData);
+    float ax = (float)aData[0] * IMU.aRes - aBias[0];
+    float ay = (float)aData[1] * IMU.aRes - aBias[1];
+    float az = (float)aData[2] * IMU.aRes - aBias[2];
+    int16_t gData[3];
+    IMU.getGres(); IMU.readGyroData(gData);
+    float gx = (float)gData[0] * IMU.gRes;
+    float gy = (float)gData[1] * IMU.gRes;
+    float gz = (float)gData[2] * IMU.gRes;
+    int16_t mData[3];
+    IMU.getMres(); IMU.readMagData(mData);
+    float mx = (float)mData[0] * IMU.mRes * IMU.magCalibration[0] - IMU.magbias[0];
+    float my = (float)mData[1] * IMU.mRes * IMU.magCalibration[1] - IMU.magbias[1];
+    float mz = (float)mData[2] * IMU.mRes * IMU.magCalibration[2] - IMU.magbias[2];
+    uint32_t now = micros();
+    float deltat = ((now - lastUpdate) / 1000000.0f);
+    lastUpdate = now;
+    // MadgwickQuaternionUpdate(-ax, ay, az, gx*PI/180.0f, -gy*PI/180.0f, -gz*PI/180.0f,  my,  -mx, mz, deltat);
+    MadgwickQuaternionUpdate(ax, ay, az, gx*PI/180.0f, gy*PI/180.0f, gz*PI/180.0f,  my,  mx, -mz, deltat);
+    //
+}
+
+const float *getQuaternion() { return getQ(); }
 
 void mpuSleep()
 {
@@ -72,6 +101,8 @@ int calibrateBearing()
   storeMagBiasEEPROM(IMU.magbias);
   return 1;
 }
+
+void calibrateMPU() { IMU.calibrateMPU9250(gBias, aBias); }
 
 float getTemperature()
 {

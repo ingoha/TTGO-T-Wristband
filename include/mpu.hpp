@@ -17,3 +17,6 @@ int calibrateBearing();
 void calibrateGyro();
 void mpuSleep();
 float getTemperature();
+const float *getQuaternion();
+void updateMPU();
+void calibrateMPU();

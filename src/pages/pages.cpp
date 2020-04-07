@@ -8,100 +8,97 @@ uint32_t time_out = millis();
 uint16_t max_time_out = 15000;
 bool handlingAction = false;
 bool initialLoad = true;
+bool subMenu = false;
 
-void initButton()
-{
+typedef void(*Page)(bool);
+Page pages[] = {
+    pageClock,
+    pageRtc,
+    pageBattery,
+    pageBearing,
+    pageTemperature,
+    pageOta,
+    handleSleep,
+    NULL
+};
+
+typedef void(*Action)();
+Action actions[] = {
+    actionClock,
+    actionClock,
+    waitOta,
+    actionBearing,
+    NULL,
+    waitOta,
+    NULL,
+    NULL
+};
+
+typedef bool(*Submenu)(bool);
+Submenu submenus[] = {
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    submenuTemperature,
+    NULL,
+    NULL,
+    NULL
+};
+
+int timeOut[] = { 8, 15, 15, 60, 30, 15, 0 };
+
+void initButton() {
   pinMode(TP_PWR_PIN, PULLUP);
   digitalWrite(TP_PWR_PIN, HIGH);
   tp_button.begin();
   tp_button.onPressedFor(1000, handleAction);
-  tp_button.onPressed(increasePage);
+  tp_button.onPressed(handlePress);
   page = 0;
   showPage();
 }
 
-void handleUi()
-{
-  if (millis() - time_out > max_time_out && !handlingAction)
-  {
-    handleSleep(false);
-  }
-  else
-  {
-    tp_button.read();
-    if (!handlingAction)
-    {
-      showPage();
+void handleUi() {
+    if (millis() - time_out > max_time_out && !handlingAction) {
+        handleSleep(false);
+    } else {
+        tp_button.read();
+        if (!handlingAction) { showPage(); }
     }
-  }
 }
 
-void increasePage()
-{
-  time_out = millis();
-  page++;
-  initialLoad = true;
+void handlePress() {
+    time_out = millis();
+    if (submenus[page] && submenus[page](false)) { return; }
+    initialLoad = true;
+    increasePage();
 }
 
-void showPage()
-{
-  switch (page)
-  {
-  case 0:
-    max_time_out = 8000;
-    pageClock(initialLoad);
-    break;
-  case 1:
-    max_time_out = 15000;
-    pageRtc(initialLoad);
-    break;
-  case 2:
-    max_time_out = 15000;
-    pageBattery(initialLoad);
-    break;
-  case 3:
-    max_time_out = 60000;
-    pageBearing(initialLoad);
-    break;
-  case 4:
-    max_time_out = 30000;
-    pageTemperature(initialLoad);
-    break;
-  case 5:
-    max_time_out = 15000;
-    pageOta(initialLoad);
-    break;
-  case 6:
-    handleSleep();
-    break;
-  }
-  initialLoad = false;
+void increasePage() { page++; initialLoad = true; }
+
+void showPage() {
+    if (pages[page]) {
+        max_time_out = timeOut[page] * 1000;
+        if (max_time_out < 1000) { max_time_out = 10000; }
+        pages[page](initialLoad);
+        initialLoad = false;
+    } else { msgInfo2("Missing page", String(page).c_str()); }
 }
 
-void handleAction()
-{
-  handlingAction = true;
-  time_out = millis();
-  switch (page)
-  {
-  case 0:
-    actionClock();
-    break;
-  case 1:
-    actionClock();
-    break;
-  case 2:
-    waitOta();
-    break;
-  case 3:
-    actionBearing();
-    break;
-  case 5:
-    waitOta();
-    page = 0;
-    break;
-  }
-  time_out = millis();
-  handlingAction = false;
-  initialLoad = true;
+void handleAction() {
+    handlingAction = true;
+    if (actions[page]) {
+        actions[page]();
+        initialLoad = true;
+    } else if (submenus[page]) {
+        submenus[page](true);
+    }
+    handlingAction = false;
+    time_out = millis();
+}
+
+uint8_t getTimeout() {
+    uint32_t t =  100 - ((millis() - time_out) * 100 / max_time_out);
+    if (t > 100) { return 100; }
+    return t;
 }
