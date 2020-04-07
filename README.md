@@ -1,3 +1,19 @@
+# WIP: Fork
+
+Based on work of [TioRuben](https://github.com/TioRuben). WIP.
+
+## Changes:
+
+ - User interface: submenus support added. Long touch for enter and action, single touch for next option.
+ - OTA page: added wristband IP and remaining time.
+ - Bearing and temperature on same page.
+ - Temperature page changed to quaternion and yaw, pitch and roll values display (WIP, strange readings), and submenu.
+ - Main (clock) page: time, date, appointments ( today / tomorrow / this week) (WIP), battery status.
+
+Original readme below.
+
+---
+
 # WIP: TTGO T-Wristband Example
 
 First steps with TTGO T-Wristband. [Product page](https://es.aliexpress.com/item/4000527495064.html).
