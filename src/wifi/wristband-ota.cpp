@@ -41,6 +41,7 @@ void setupOTA()
         msgWarning("UPDATE FAILED!");
         delay(3000);
         otaStart = false;
+        home();
       });
 
   ArduinoOTA.begin();

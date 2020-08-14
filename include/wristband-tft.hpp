@@ -37,3 +37,5 @@ void refreshDrawQuaternion(const float *q);
 void displayAppointments();
 void drawOptions(const char *options[], uint8_t n);
 void drawMenuPointer(int8_t n, uint8_t max);
+void drawStatus(char symbol, bool status, uint8_t pos);
+void displayCounter(float counter, float add, float percent);

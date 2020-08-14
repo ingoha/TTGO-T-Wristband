@@ -25,7 +25,7 @@ Page pages[] = {
 typedef void(*Action)();
 Action actions[] = {
     actionClock,
-    actionClock,
+    actionCounter,
     waitOta,
     actionBearing,
     NULL,
@@ -102,3 +102,5 @@ uint8_t getTimeout() {
     if (t > 100) { return 100; }
     return t;
 }
+
+void home() { page = 0; initialLoad = true; showPage(); }

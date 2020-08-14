@@ -1,12 +1,16 @@
 #include "pages/page-temperature.hpp"
 
+#define OPTIONS_TEMPERATURE 6
+
 uint32_t timeTemperature = millis();
 int8_t menu = -1;
 
 const char *options[] = {
     "OTA",
-    "Kalibracja",
+    "Kalibruj",
     "Test",
+    "Start",
+    "Zeruj",
     "WSTECZ",
     NULL
 };
@@ -28,6 +32,8 @@ Action pageActions[] = {
     waitOta,
     actionTemperature,
     menuActionTest,
+    home,
+    zeroCounter, 
     menuBack,
     NULL,
 };
@@ -39,11 +45,17 @@ void pageTemperature(bool initialLoading) {
         initDrawQuaternion();
         menu = -1;
     }
+    updateDMP();
     if (millis() - timeTemperature > 300) {
-        updateMPU();
+        // updateMPU();
         if (menu >= 0) {
             drawBottomBar(getTimeout(), TFT_BLUE);
-        } else { refreshDrawQuaternion(getQuaternion()); }
+        } else {
+            // refreshDrawQuaternion(getQuaternion());
+            float q[7] = { 0, 0, 0, 0, 0, 0, 0 };
+            getDMP(q);
+            refreshDrawQuaternion(q);
+        }
         timeTemperature = millis();
     }
 }
@@ -58,9 +70,9 @@ void actionTemperature() {
 bool submenuTemperature(bool press) {
     if (!press && menu < 0) { return false; }
     if (press && menu < 0) {
-        drawOptions(options, 4);
+        drawOptions(options, OPTIONS_TEMPERATURE);
         menu = 0;
-        drawMenuPointer(menu, 4);
+        drawMenuPointer(menu, OPTIONS_TEMPERATURE);
         return true;
     }
     if (press && pageActions[menu]) {
@@ -68,6 +80,6 @@ bool submenuTemperature(bool press) {
         return true;
     }
     if (!options[++menu]) { menu = 0; }
-    drawMenuPointer(menu, 4);
+    drawMenuPointer(menu, OPTIONS_TEMPERATURE);
     return true;
 }

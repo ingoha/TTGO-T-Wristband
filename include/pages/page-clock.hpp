@@ -8,3 +8,5 @@
 void pageClock(bool initialLoad);
 void pageRtc(bool initialLoad);
 void actionClock();
+void actionCounter();
+void zeroCounter();

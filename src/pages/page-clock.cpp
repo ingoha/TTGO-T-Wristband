@@ -1,5 +1,10 @@
 #include "pages/page-clock.hpp"
 
+#define MASS 75
+#define PER_M 0.7
+#define PER_F 0.6
+#define SHOT_G 16
+
 unsigned long clockRefresh = 0;
 bool colon = true;
 uint16_t colonX = 0;
@@ -10,6 +15,10 @@ uint16_t colonXUTC = 0;
 uint8_t oldMinuteUTC = 99;
 uint8_t oldDayUTC = 99;
 float oldVoltage = 10;
+int8_t oldWifi = -1;
+
+RTC_DATA_ATTR float grams = 0;
+RTC_DATA_ATTR float gramsAdd = 0;
 
 bool appointmentsUpdated = true; // TODO
 
@@ -56,6 +65,11 @@ void pageClock(bool initialLoad)
     }
     if (appointmentsUpdated) { displayAppointments(); appointmentsUpdated = false; }
     oldVoltage = voltage;
+    int8_t wifi = WiFi.status() == WL_CONNECTED ? 1 : 0;
+    if (wifi != oldWifi) {
+        drawStatus('W', wifi > 0, 10);
+        oldWifi = wifi;
+    }
   }
 }
 
@@ -72,9 +86,7 @@ void pageRtc(bool initialLoad)
     oldMinuteUTC = current.minute;
     oldDayUTC = current.day;
     clockRefresh = millis();
-  }
-  else if (millis() - clockRefresh > 1000)
-  {
+  } else if (millis() - clockRefresh > 1000) {
     clockRefresh = millis();
     current = getUTCTime();
     colonUTC = !colonUTC;
@@ -89,6 +101,18 @@ void pageRtc(bool initialLoad)
     }
     oldMinuteUTC = current.minute;
     oldDayUTC = current.day;
+
+    if (grams > 0) { grams -= (10 * diffTime()) / 3600; }
+    if (gramsAdd > 0) {
+      float add = (0.5 * diffTime()) / 60;
+      if (gramsAdd >= add) {
+        grams += add; gramsAdd -= add;
+      } else { grams += gramsAdd; gramsAdd = 0; }
+    }
+    if (grams < 0) { grams = 0; }
+    if (gramsAdd < 0) { gramsAdd = 0; }
+    displayCounter(grams, gramsAdd, grams / (MASS * PER_M));
+    saveTime();
   }
 }
 
@@ -100,4 +124,13 @@ void actionClock()
   deactivateWifi();
   msgSuccess("TIME UPDATED");
   sleep(3);
+}
+
+void actionCounter() {
+  gramsAdd += SHOT_G;
+}
+
+void zeroCounter() {
+  grams = 0;
+  gramsAdd = 0;
 }

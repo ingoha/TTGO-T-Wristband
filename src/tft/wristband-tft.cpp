@@ -189,12 +189,13 @@ void drawBattery(float voltage, uint8_t percentage, bool charging)
   tft.setTextColor(TFT_WHITE);
   tft.setTextDatum(MC_DATUM);
   tft.setTextPadding(tft.textWidth(" 888% ", 2));
+  width = tft.width(); originx = 0; height = 0; originy = 5;
   tft.drawString(String(percentage) + "%", width / 2 + originx, height / 2 + originy, 2);
 
   tft.setTextColor(TFT_WHITE, TFT_BLACK);
   tft.setTextDatum(BC_DATUM);
   String voltageInfo = String(voltageString) + "V";
-  if (charging) { voltageInfo += " Charging"; }
+  if (charging) { voltageInfo += " CHRG"; }
   tft.drawString(voltageInfo, tft.width() / 2, tft.height());
 }
 
@@ -322,7 +323,7 @@ void displayAppointments() {
   tft.setTextDatum(TC_DATUM);
   // tft.setTextColor(TFT_GREEN, TFT_BLACK);
   tft.setTextColor(today > 0 ? TFT_ORANGE : 0xFBE0, TFT_BLACK);
-  tft.drawString(status, tft.width() / 2, 130, 2);
+  tft.drawString(status, tft.width() / 2, 120, 2);
 }
 
 void drawOptions(const char *options[], uint8_t n) {
@@ -330,12 +331,33 @@ void drawOptions(const char *options[], uint8_t n) {
     tft.setTextDatum(ML_DATUM);
     tft.setTextColor(TFT_WHITE, TFT_BLACK);
     for (uint8_t i = 0; i < n; i++) {
-        if (options[i]) { tft.drawString(options[i], 30, (i + 1) * 20, 2); }
+        if (options[i]) { tft.drawString(options[i], 20, (i + 1) * 20, 2); }
     }
 }
 
 void drawMenuPointer(int8_t n, uint8_t max) {
-    tft.fillRect(6, 10, 20, max * 20, TFT_BLACK); uint8_t y = (n + 1) * 20; uint8_t x = 20;
-    if (n == (max - 1)) { tft.fillTriangle(x, y - 5, 6, y, x, y + 5, TFT_WHITE); return; }
-    if (n >= 0) { tft.fillTriangle(6, y - 5, x, y, 6, y + 5, TFT_WHITE); }
+    uint8_t width = 10; uint8_t from = 3;
+    tft.fillRect(from, 10, width, max * 20, TFT_BLACK);
+    uint8_t y = (n + 1) * 20; uint8_t x = width + from - 1;
+    if (n == (max - 1)) { tft.fillTriangle(x, y - 5, from, y, x, y + 5, TFT_WHITE); return; }
+    if (n >= 0) { tft.fillTriangle(from, y - 5, x, y, from, y + 5, TFT_WHITE); }
+}
+
+void drawStatus(char symbol, bool status, uint8_t pos) {
+  char str[2]; str[0] = symbol; str[1] = '\0';
+  tft.setTextDatum(TC_DATUM);
+  tft.setTextColor(status ? TFT_ORANGE : TFT_DARKGREY, TFT_BLACK);
+  tft.drawString(str, pos, 135, 1);
+}
+
+void displayCounter(float counter, float add, float percent) {
+  char str[24] = "0.00";
+  char per[24] = "0.00";
+  sprintf(str, "%.1f +%.1f", counter, add);
+  sprintf(per, "%.3f%%", percent);
+  tft.setTextDatum(TC_DATUM);
+  // tft.setTextColor(TFT_GREEN, TFT_BLACK);
+  tft.setTextColor(TFT_ORANGE, TFT_BLACK);
+  tft.drawString(str, tft.width() / 2, 120, 2);
+  tft.drawString(per, tft.width() / 2, 140, 2);
 }

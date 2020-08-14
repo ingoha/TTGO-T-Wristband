@@ -5,6 +5,8 @@ PCF8563_Class rtc;
 uint8_t current_dayweek = 8;
 uint8_t current_minute = 0;
 
+RTC_DATA_ATTR time_t saved;
+
 void initClock()
 {
   rtc.begin(Wire);
@@ -24,6 +26,27 @@ RTC_Date getClockTime()
 {
   RTC_Date now = rtc.getDateTime();
   return now;
+}
+
+time_t getTime() {
+  tm saved;
+  RTC_Date now = rtc.getDateTime();
+  saved.tm_hour = now.hour - (isDST(now) ? 2 : 1);
+  saved.tm_min = now.minute;
+  saved.tm_sec = now.second;
+  saved.tm_mday = now.day;
+  saved.tm_mon = now.month - 1;
+  saved.tm_year = now.year - 1900;
+  saved.tm_isdst = -1;
+  return mktime(&saved);
+}
+
+void saveTime() {
+  saved = getTime();
+}
+
+double diffTime() {
+  return difftime(getTime(), saved);
 }
 
 RTC_Date getUTCTime()

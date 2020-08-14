@@ -2,32 +2,26 @@
 
 WiFiManager wifiManager;
 
-void configModeCallback(WiFiManager *myWiFiManager)
-{
+void configModeCallback(WiFiManager *myWiFiManager) {
   char apName[50] = " ";
   wifiManager.getConfigPortalSSID().toCharArray(apName, 50);
   wifiManagerAdvice(apName);
 }
 
-void setupWiFi()
-{
+void setupWiFi() {
   WiFiManager wifiManager;
   wifiManager.setAPCallback(configModeCallback);
   wifiManager.setBreakAfterConfig(true);
+  wifiManager.setConfigPortalTimeout(180);
   wifiManager.autoConnect("T-Wristband");
 }
 
-void activateWifi()
-{
+void activateWifi() {
   WiFi.mode(WIFI_STA);
   sleep(1);
-  if (WiFi.status() != WL_CONNECTED)
-  {
-    setupWiFi();
-  }
+  if (WiFi.status() != WL_CONNECTED) { setupWiFi(); }
 }
 
-void deactivateWifi()
-{
+void deactivateWifi() {
   WiFi.mode(WIFI_OFF);
 }
