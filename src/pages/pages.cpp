@@ -9,9 +9,11 @@ uint16_t max_time_out = 15000;
 bool handlingAction = false;
 bool initialLoad = true;
 bool subMenu = false;
+int8_t pagesCount = 0;
 
 typedef void(*Page)(bool);
 Page pages[] = {
+    NULL,
     pageClock,
     pageRtc,
     pageBattery,
@@ -19,11 +21,14 @@ Page pages[] = {
     pageTemperature,
     pageOta,
     handleSleep,
+    NULL,
+    NULL,
     NULL
 };
 
 typedef void(*Action)();
 Action actions[] = {
+    NULL,
     actionClock,
     actionCounter,
     waitOta,
@@ -56,6 +61,7 @@ void initButton() {
   tp_button.onPressed(handlePress);
   page = 0;
   showPage();
+  for (pagesCount = 0; (pages[pagesCount] || pages[pagesCount+1]) && pagesCount < 10; pagesCount++) {}
 }
 
 void handleUi() {
@@ -74,7 +80,11 @@ void handlePress() {
     increasePage();
 }
 
-void increasePage() { page++; initialLoad = true; }
+void increasePage() {
+    page++;
+    initialLoad = true;
+    if (!pages[page] && !pages[page+1]) { page = 0; }
+}
 
 void showPage() {
     if (pages[page]) {
@@ -82,7 +92,8 @@ void showPage() {
         if (max_time_out < 1000) { max_time_out = 10000; }
         pages[page](initialLoad);
         initialLoad = false;
-    } else { msgInfo2("Missing page", String(page).c_str()); }
+    }
+    showClock(page, pagesCount);
 }
 
 void handleAction() {

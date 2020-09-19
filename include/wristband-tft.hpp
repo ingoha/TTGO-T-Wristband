@@ -1,14 +1,24 @@
+#pragma once
+
 #include <Arduino.h>
 #include <TFT_eSPI.h>
 #include <SPI.h>
 #include <Wire.h>
 #include <hal.hpp>
 
+#include "pages/page-clock.hpp"
+#include "Orbitron_Light_7.h"
+
 #define SEG7_BACKGROUND 0x0821
+
+#define TFT_GREY 0xBDF7
+
+extern TFT_eSPI tft;
 
 void tftInit();
 void wifiManagerAdvice(const char *ap_name);
 void drawProgressBar(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, uint8_t percentage, uint16_t frameColor, uint16_t barColor);
+void drawOTA(int progress);
 void updatingText();
 void msgError(const char *message);
 void msgWarning(const char *message);

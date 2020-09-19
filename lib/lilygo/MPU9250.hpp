@@ -181,7 +181,7 @@
 #define AK8963_ADDRESS 0x0C  // Address of magnetometer
 #endif                       // AD0
 
-class MPU9250
+class MPU9250lib
 {
 protected:
   // Set initial input parameters

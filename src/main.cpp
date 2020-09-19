@@ -21,6 +21,7 @@ void setup()
   initMPU();
   initButton();
   setupBattery();
+  Serial.println("START.");
 }
 
 void loop()

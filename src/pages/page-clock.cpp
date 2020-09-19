@@ -1,4 +1,8 @@
+
 #include "pages/page-clock.hpp"
+
+#ifndef H_PAGE_CLOCK
+#define H_PAGE_CLOCK
 
 #define MASS 75
 #define PER_M 0.7
@@ -22,8 +26,67 @@ RTC_DATA_ATTR float gramsAdd = 0;
 
 bool appointmentsUpdated = true; // TODO
 
-void pageClock(bool initialLoad)
-{
+void showClock(uint8_t page, uint8_t pages) {
+  RTC_Date current;
+  float voltage;
+  if (millis() - clockRefresh > 1000) {
+    current = getClockTime();
+    clockRefresh = millis();
+    // current = getClockTime();
+    tft.setFreeFont(&Orbitron_Light_24);
+    /*
+    if (!page) {
+      tft.setTextColor(TFT_RED, TFT_BLACK);
+      tft.setTextDatum(TC_DATUM);
+      tft.drawString(String(page).c_str(), tft.width() / 2, tft.height() - 50);
+    }
+    */
+    tft.setTextColor(TFT_WHITE, TFT_BLACK);
+    tft.setTextDatum(TL_DATUM);
+    tft.drawString(String(current.hour < 10 ? "0" : "") + String(current.hour) + ":", 0, 0);
+    tft.drawString(String(current.minute < 10 ? "0" : "") + String(current.minute), 0, 25);
+    tft.setFreeFont(&orbitron_light7pt7b);
+    tft.setTextDatum(TR_DATUM);
+    tft.drawString(String(current.day) + ".", tft.width(), 0);
+    tft.drawString(String(current.month < 10 ? "0" : "") + String(current.month) + ".", tft.width(), 14);
+    tft.drawString(getClockDayName(), tft.width() - 1, 28);
+    /* if (lastError[0] != 0) {
+      tft.setTextColor(TFT_RED, TFT_BLACK);
+      tft.setTextColor(TFT_WHITE, TFT_BLACK);
+      tft.setTextDatum(TC_DATUM);
+      tft.drawString(lastError, tft.width(), 100);
+    } */
+    tft.setFreeFont(&TomThumb);
+    tft.setTextDatum(TR_DATUM);
+    tft.drawString(String(current.year), tft.width(), 45);
+    tft.setTextDatum(TR_DATUM);
+    voltage = getVoltage();
+    tft.drawString(String(voltage, 2) + "V", tft.width() + 3, 52);
+    tft.setTextDatum(TC_DATUM);
+    uint8_t percent = calcPercentage(voltage);
+    tft.drawString(String(percent) + "%", tft.width() / 2, 52);
+    tft.setTextDatum(TL_DATUM);
+    tft.drawString(String(page) + "/" + String(pages), 0, 52);
+    tft.setFreeFont(NULL);
+    tft.drawLine(0, 58, tft.width(), 58, TFT_GREY);
+    uint16_t color = TFT_GREEN;
+    if (percent <= 50) { color = TFT_YELLOW; }
+    if (percent <= 10) { color = TFT_ORANGE; }
+    if (percent <= 5)  { color = TFT_RED; }
+    tft.drawLine(0, 58, tft.width() * percent / 100.0, 58, color);
+    if (pages > 0) {
+      uint8_t pw = tft.width() / (pages + 1);
+      uint8_t pr = 0;
+      if (pages > 1) { pr = (tft.width() - (pw * pages)) / (pages - 1); }
+      for (uint8_t i = 0; i < pages; i++) {
+        uint8_t px = i * pw + i * pr;
+        tft.drawLine(px, 60, px + pw, 60, i == page ? TFT_CYAN : TFT_WHITE);
+      }
+    }
+  }
+}
+
+void pageClock(bool initialLoad) {
   RTC_Date current;
   float voltage;
   if (initialLoad) {
@@ -134,3 +197,5 @@ void zeroCounter() {
   grams = 0;
   gramsAdd = 0;
 }
+
+#endif

@@ -5,6 +5,8 @@ PCF8563_Class rtc;
 uint8_t current_dayweek = 8;
 uint8_t current_minute = 0;
 
+String dayNames[] = { "-", "PN", "WT", "SR", "CZ", "PT", "SO", "ND", "\0" };
+
 RTC_DATA_ATTR time_t saved;
 
 void initClock()
@@ -20,6 +22,17 @@ void rtcSleep()
   rtc.disableAlarm();
   rtc.disableCLK();
   rtc.disableTimer();
+}
+
+int getClockDay() {
+  RTC_Date now = rtc.getDateTime();
+  return rtc.getDayOfWeek(now.day, now.month, now.year);
+}
+
+String getClockDayName() {
+  uint8_t wd = getClockDay();
+  if (dayNames[wd] && dayNames[wd][0]) { return dayNames[wd]; }
+  return String();
 }
 
 RTC_Date getClockTime()

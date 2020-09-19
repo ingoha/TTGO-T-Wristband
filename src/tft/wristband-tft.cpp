@@ -43,10 +43,25 @@ void drawProgressBar(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, uint8_t p
 }
 
 void updatingText() {
-    tftLandscape();
+    // tftLandscape();
+    tftPortrait();
     tft.fillScreen(TFT_BLACK);
     tft.setTextColor(TFT_WHITE, TFT_BLACK);
-    tft.drawString("Updating...", tft.width() / 2 - 20, 55);
+    // tft.drawString("Updating...", tft.width() / 2 - 20, 55);
+}
+
+void drawOTA(int progress) {
+  // tftPortrait();
+  // showClock(0, 0);
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+  tft.setFreeFont(&Orbitron_Light_24);
+  tft.setTextDatum(TC_DATUM);
+  tft.drawString("OTA", tft.width() / 2, 70);
+  tft.setTextPadding(tft.textWidth(" 888% "));
+  tft.drawString(String(progress) + "%", tft.width() / 2, 100);
+  tft.drawLine(0, tft.height() - 2, tft.width(), tft.height() - 2, TFT_WHITE);
+  tft.drawLine(0, tft.height() - 1, tft.width() * progress / 100.0, tft.height() - 1, TFT_CYAN);
+  tft.setFreeFont(NULL);
 }
 
 void msgBig(const char *message)

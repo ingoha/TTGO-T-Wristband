@@ -1,7 +1,7 @@
 #include "mpu.hpp"
 #include "quaternionFilters.hpp"
 
-MPU9250 IMU;
+MPU9250lib IMU;
 MPU9250_DMP imud; 
 
 float aBias[3]; float gBias[3]; float mCal[3];

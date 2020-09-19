@@ -14,6 +14,8 @@ void setupWiFi() {
   wifiManager.setBreakAfterConfig(true);
   wifiManager.setConfigPortalTimeout(180);
   wifiManager.autoConnect("T-Wristband");
+  sleep(1);
+  if (WiFi.status() != WL_CONNECTED) { deactivateWifi(); }
 }
 
 void activateWifi() {

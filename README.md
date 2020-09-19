@@ -2,6 +2,12 @@
 
 Based on work of [TioRuben](https://github.com/TioRuben). WIP.
 
+## WIP:
+ - Interface change - upper half always visible,
+ - Trying to add DMP library,
+ - Experiments with simple, stack based language for defining watch pages.
+ - MQTT for appointments sync,
+
 ## Changes:
 
  - Portrait orientation.

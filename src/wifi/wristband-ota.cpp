@@ -24,15 +24,17 @@ void setupOTA()
       })
       .onProgress([](unsigned int progress, unsigned int total) {
         int percentage = (progress / (total / 100));
-        drawProgressBar(10, 30, 120, 15, percentage, TFT_WHITE, TFT_BLUE);
+        // drawProgressBar(10, 30, 120, 15, percentage, TFT_WHITE, TFT_BLUE);
+        drawOTA(percentage);
       })
       .onError([](ota_error_t error) {
         Serial.printf("Error[%u]: ", error);
         if (error == OTA_AUTH_ERROR)
           Serial.println("Auth Failed");
-        else if (error == OTA_BEGIN_ERROR)
+        else if (error == OTA_BEGIN_ERROR) {
           Serial.println("Begin Failed");
-        else if (error == OTA_CONNECT_ERROR)
+          // lastError = "EOTA: BEGIN";
+        } else if (error == OTA_CONNECT_ERROR)
           Serial.println("Connect Failed");
         else if (error == OTA_RECEIVE_ERROR)
           Serial.println("Receive Failed");
