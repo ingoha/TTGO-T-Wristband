@@ -13,7 +13,7 @@ void pageBearing(bool initialLoading)
 {
   if (initialLoading)
   {
-    deactivateWifi();
+    // deactivateWifi();
     initDrawBearing();
     initDrawTemperature();
     initMPU();
@@ -74,9 +74,11 @@ void handleRoot(HTTPRequest * req, HTTPResponse * res) {
 void handleEcho(HTTPRequest * req, HTTPResponse * res) {
   requests++;
   // The echo callback will return the request body as response body.
+  /*
   zf_init(1);
 	zf_bootstrap();
 	zf_eval(": . 1 sys ;");
+  */
 
   // We use text/plain for the response
   res->setHeader("Content-Type","text/plain");
@@ -96,11 +98,14 @@ void handleEcho(HTTPRequest * req, HTTPResponse * res) {
     // write character data to the response but also the write function
     // to write binary data to the response.
     res->write(buffer, s);
+    /*
     zf_result r = zf_eval((char*)buffer);
     if (r != ZF_OK) { res->printf("\n[%d] ERROR", r); }
+    */
   }
 }
 
+/*
 zf_input_state zf_host_sys(zf_syscall_id id, const char *input) {
 	char buf[16];
 
@@ -129,3 +134,4 @@ zf_cell zf_host_parse_num(const char *buf) {
         }
         return v;
 }
+*/

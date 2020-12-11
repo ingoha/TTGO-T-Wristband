@@ -5,19 +5,17 @@ Based on work of [TioRuben](https://github.com/TioRuben). WIP.
 ## WIP:
  - Interface change - upper half always visible,
  - Trying to add DMP library,
- - Experiments with simple, stack based language for defining watch pages.
- - MQTT for appointments sync,
+ - MQTT for data sync,
 
 ## Changes:
 
  - Portrait orientation.
  - User interface: submenus support added. Long touch for enter and action, single touch for next option.
  - OTA page: added wristband IP and remaining time.
- - Bearing and temperature on same page.
  - Temperature page changed to quaternion and yaw, pitch and roll values display (WIP, strange readings), and submenu.
- - Main (clock) page: time, date, appointments ( today / tomorrow / this week) (WIP), battery status.
+ - Wake-up on charging, constantly awake, and in OTA mode.
 
-Original readme below.
+Original README below.
 
 ---
 

@@ -1,2 +1,6 @@
 .pio/**
 .vscode/**
+.clang*
+.ccls
+*.json
+.cache

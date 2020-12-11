@@ -64,7 +64,19 @@ void initButton() {
   for (pagesCount = 0; (pages[pagesCount] || pages[pagesCount+1]) && pagesCount < 10; pagesCount++) {}
 }
 
+void refreshTimer() {
+    time_out = millis();
+}
+
 void handleUi() {
+    if (!isCharging()) { digitalWrite(LED_PIN, digitalRead(TP_PIN_PIN)); }
+    /*
+    tp_button.read();
+    if (getBusVoltage() > 4.0) {
+        if (!handlingAction) { showPage(); }
+        return;
+    }
+    */
     if (millis() - time_out > max_time_out && !handlingAction) {
         handleSleep(false);
     } else {

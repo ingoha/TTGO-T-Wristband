@@ -20,6 +20,7 @@ void wifiManagerAdvice(const char *ap_name);
 void drawProgressBar(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, uint8_t percentage, uint16_t frameColor, uint16_t barColor);
 void drawOTA(int progress);
 void updatingText();
+void status(const char *msg, int state);
 void msgError(const char *message);
 void msgWarning(const char *message);
 void msgSuccess(const char *message);

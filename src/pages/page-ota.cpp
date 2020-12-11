@@ -6,7 +6,7 @@ bool timeoutDrawn = false;
 void pageOta(bool initialLoad)
 {
   if (initialLoad) {
-    deactivateWifi();
+    // deactivateWifi();
     tft.setTextColor(TFT_WHITE, TFT_BLACK);
     tft.setTextDatum(TC_DATUM);
     tft.setFreeFont(&Orbitron_Light_24);

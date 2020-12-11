@@ -6,6 +6,7 @@
 #include "MPU9250.hpp"
 #include "wristband-tft.hpp"
 #include "eeprom.hpp"
+
 #include "SparkFunMPU9250-DMP.h"
 
 #define GYRO_CALIBRATION_BASE_ADDRESS 0x10

@@ -28,7 +28,7 @@ bool appointmentsUpdated = true; // TODO
 
 void showClock(uint8_t page, uint8_t pages) {
   RTC_Date current;
-  float voltage;
+  float voltage, bvoltage;
   if (millis() - clockRefresh > 1000) {
     current = getClockTime();
     clockRefresh = millis();
@@ -61,10 +61,11 @@ void showClock(uint8_t page, uint8_t pages) {
     tft.drawString(String(current.year), tft.width(), 45);
     tft.setTextDatum(TR_DATUM);
     voltage = getVoltage();
-    tft.drawString(String(voltage, 2) + "V", tft.width() + 3, 52);
+    bvoltage = getBusVoltage();
+    tft.drawString(String(bvoltage, 2) + "V " + String(voltage, 2) + "V", tft.width() + 3, 52);
     tft.setTextDatum(TC_DATUM);
     uint8_t percent = calcPercentage(voltage);
-    tft.drawString(String(percent) + "%", tft.width() / 2, 52);
+    // tft.drawString(String(percent) + "%", tft.width() / 2, 52);
     tft.setTextDatum(TL_DATUM);
     tft.drawString(String(page) + "/" + String(pages), 0, 52);
     tft.setFreeFont(NULL);
@@ -90,7 +91,7 @@ void pageClock(bool initialLoad) {
   RTC_Date current;
   float voltage;
   if (initialLoad) {
-    deactivateWifi();
+    // deactivateWifi();
     clearScreen();
     current = getClockTime();
     displayDate(current.day, current.month, current.year, false);
@@ -141,7 +142,7 @@ void pageRtc(bool initialLoad)
   RTC_Date current;
   if (initialLoad)
   {
-    deactivateWifi();
+    // deactivateWifi();
     clearScreen();
     current = getUTCTime();
     displayDate(current.day, current.month, current.year, true);
@@ -184,7 +185,7 @@ void actionClock()
   activateWifi();
   msgInfo("UPDATING TIME...");
   setTime(syncTime());
-  deactivateWifi();
+  // deactivateWifi();
   msgSuccess("TIME UPDATED");
   sleep(3);
 }

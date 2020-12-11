@@ -222,7 +222,7 @@ void initDrawBearing() {
     tft.drawCircle(40, 40, 35, TFT_WHITE);
 }
 
-void refreshDrawBearing(int16_t bearing) { 
+void refreshDrawBearing(int16_t bearing) {
     char bearingText[5] = "---\0";
     if (bearing >= 0) { sprintf(bearingText, "%03d", bearing); }
     tft.setTextDatum(MC_DATUM);
@@ -274,6 +274,12 @@ void drawBottomBar(uint8_t percent, uint16_t color) {
 
 void tftLandscape() { tft.setRotation(1); landscape = true;  }
 void tftPortrait()  { tft.setRotation(0); landscape = false; }
+
+void status(const char *msg, int state) {
+    tft.setTextDatum(TC_DATUM);
+    tft.setTextColor(TFT_WHITE, TFT_BLACK);
+    tft.drawString(String(msg) + " " + String(state) + "  ", tft.width() / 2, tft.height() - 20, 2);
+}
 
 void displayBatteryValue(float voltage, uint8_t percent, bool charging) {
     char str[14] = "";

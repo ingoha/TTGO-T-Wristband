@@ -1,9 +1,11 @@
 #include "wristband-ota.hpp"
 
+bool otaInit  = false;
 bool otaStart = false;
 
 void setupOTA()
 {
+    if (otaInit) { return; }
   ArduinoOTA.setHostname("T-Wristband");
   ArduinoOTA.setPassword("wristbandpass");
 
@@ -26,6 +28,7 @@ void setupOTA()
         int percentage = (progress / (total / 100));
         // drawProgressBar(10, 30, 120, 15, percentage, TFT_WHITE, TFT_BLUE);
         drawOTA(percentage);
+        digitalWrite(LED_PIN, !digitalRead(LED_PIN));
       })
       .onError([](ota_error_t error) {
         Serial.printf("Error[%u]: ", error);
@@ -47,10 +50,11 @@ void setupOTA()
       });
 
   ArduinoOTA.begin();
+  otaInit = true;
 }
 
-bool otaRunning()
-{
-  ArduinoOTA.handle();
-  return otaStart;
+bool otaRunning() {
+    if (!otaInit) { return false; }
+    ArduinoOTA.handle();
+    return otaStart;
 }

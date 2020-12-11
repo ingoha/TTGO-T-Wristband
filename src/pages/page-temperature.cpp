@@ -33,14 +33,14 @@ Action pageActions[] = {
     actionTemperature,
     menuActionTest,
     home,
-    zeroCounter, 
+    zeroCounter,
     menuBack,
     NULL,
 };
 
 void pageTemperature(bool initialLoading) {
     if (initialLoading) {
-        deactivateWifi();
+        // deactivateWifi();
         initMPU();
         initDrawQuaternion();
         menu = -1;

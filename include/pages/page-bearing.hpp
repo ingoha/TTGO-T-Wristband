@@ -9,10 +9,6 @@
 #include <HTTPResponse.hpp>
 #include <ResourceNode.hpp>
 
-extern "C" {
-#include <zforth.h>
-}
-
 using namespace httpsserver;
 
 void pageBearing(bool initialLoading);

@@ -8,6 +8,7 @@
 void setupADC();
 void setupBattery();
 float getVoltage();
+float getBusVoltage();
 uint8_t calcPercentage(float volts);
 void updateBatteryChargeStatus();
 bool isCharging();

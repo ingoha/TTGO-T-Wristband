@@ -18,3 +18,4 @@ void handleAction();
 void handlePress();
 uint8_t getTimeout();
 void home();
+void refreshTimer();
