@@ -5,7 +5,7 @@ Based on work of [TioRuben](https://github.com/TioRuben). WIP.
 ## WIP:
  - Interface change - upper half always visible,
  - Trying to add DMP library,
- - MQTT for data sync,
+ - Adding FreeRTOS tasks (ESP hangs on TFT clear from task?),
 
 ## Changes:
 
@@ -13,6 +13,7 @@ Based on work of [TioRuben](https://github.com/TioRuben). WIP.
  - User interface: submenus support added. Long touch for enter and action, single touch for next option.
  - OTA page: added wristband IP and remaining time.
  - Temperature page changed to quaternion and yaw, pitch and roll values display (WIP, strange readings), and submenu.
+ - MQTT for data sync,
  - Wake-up on charging, constantly awake, and in OTA mode.
 
 Original README below.

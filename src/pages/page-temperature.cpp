@@ -3,7 +3,7 @@
 #define OPTIONS_TEMPERATURE 6
 
 uint32_t timeTemperature = millis();
-int8_t menu = -1;
+int8_t pmenu = -1;
 
 const char *options[] = {
     "OTA",
@@ -22,7 +22,7 @@ void menuActionTest() {
 }
 
 void menuBack() {
-    menu = -1;
+    pmenu = -1;
     pageTemperature(true);
 }
 
@@ -43,12 +43,12 @@ void pageTemperature(bool initialLoading) {
         // deactivateWifi();
         initMPU();
         initDrawQuaternion();
-        menu = -1;
+        pmenu = -1;
     }
     updateDMP();
     if (millis() - timeTemperature > 300) {
         // updateMPU();
-        if (menu >= 0) {
+        if (pmenu >= 0) {
             drawBottomBar(getTimeout(), TFT_BLUE);
         } else {
             // refreshDrawQuaternion(getQuaternion());
@@ -67,19 +67,19 @@ void actionTemperature() {
   sleep(5);
 }
 
-bool submenuTemperature(bool press) {
-    if (!press && menu < 0) { return false; }
-    if (press && menu < 0) {
-        drawOptions(options, OPTIONS_TEMPERATURE);
-        menu = 0;
-        drawMenuPointer(menu, OPTIONS_TEMPERATURE);
+bool submenuTemperature(int8_t press) {
+    if (!press && pmenu < 0) { return false; }
+    if (press && pmenu < 0) {
+        drawOptions(options);
+        pmenu = 0;
+        drawMenuPointer(pmenu, OPTIONS_TEMPERATURE);
         return true;
     }
-    if (press && pageActions[menu]) {
-        pageActions[menu]();
+    if (press && pageActions[pmenu]) {
+        pageActions[pmenu]();
         return true;
     }
-    if (!options[++menu]) { menu = 0; }
-    drawMenuPointer(menu, OPTIONS_TEMPERATURE);
+    if (!options[++pmenu]) { pmenu = 0; }
+    drawMenuPointer(pmenu, OPTIONS_TEMPERATURE);
     return true;
 }

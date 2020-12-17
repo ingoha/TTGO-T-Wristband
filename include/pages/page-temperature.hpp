@@ -7,5 +7,4 @@
 
 void pageTemperature(bool initialLoading);
 void actionTemperature();
-bool submenuTemperature(bool press);
-
+bool submenuTemperature(int8_t press);

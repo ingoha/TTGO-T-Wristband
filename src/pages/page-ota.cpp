@@ -53,7 +53,7 @@ void waitOta() {
             tft.setFreeFont(&Orbitron_Light_24);
             tft.setTextDatum(TC_DATUM);
             tft.drawString(String(":") + String(left < 10 ? 0 : "") + String(left), tft.width() / 2, 110);
-            showClock(0, 0);
+            drawCommon(0, 0);
             lastTime = (uint8_t)left;
         }
     }

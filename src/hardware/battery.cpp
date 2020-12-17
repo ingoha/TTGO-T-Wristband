@@ -69,6 +69,7 @@ uint8_t calcPercentage(float voltage) {
     return 0;
 }
 
+// Set LED on if battery is charging
 void updateBatteryChargeStatus() {
     digitalWrite(LED_PIN, isCharging());
 }

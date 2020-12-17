@@ -8,8 +8,10 @@
 #include "wristband-wifi.hpp"
 #include "pages.hpp"
 
-void showClock(uint8_t page, uint8_t pages);
+void saveStatus(char* status);
 
+void actionCalendar();
+void pageCalendar(bool initialLoad);
 void pageClock(bool initialLoad);
 void pageRtc(bool initialLoad);
 void actionClock();
