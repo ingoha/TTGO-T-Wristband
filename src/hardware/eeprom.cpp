@@ -1,6 +1,6 @@
 #include "eeprom.hpp"
 
-void storeMagBiasEEPROM(float *magbias)
+void Eeprom::storeMagBiasEEPROM(float *magbias)
 {
   EEPROM.begin(3 * sizeof(float));
   for (uint8_t i = 0; i < 3; i++)
@@ -11,7 +11,7 @@ void storeMagBiasEEPROM(float *magbias)
   EEPROM.end();
 }
 
-void getMagBiasEEPROM(float *magbias)
+void Eeprom::getMagBiasEEPROM(float *magbias)
 {
   EEPROM.begin(3 * sizeof(float));
   for (uint8_t i = 0; i < 3; i++)

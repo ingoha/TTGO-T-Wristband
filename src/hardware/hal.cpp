@@ -4,6 +4,9 @@ HAL* HAL::instance = nullptr;
 
 HAL::HAL() {
   battery = new Battery();
+  mpu = new MPU();
+  clock = new Clock();
+  eeprom = new Eeprom();
 }
 
 HAL* HAL::getInstance() {
@@ -23,4 +26,8 @@ MPU* HAL::getMPU() {
 
 Clock* HAL::getClock() {
   return clock;
+}
+
+Eeprom* HAL::getEEPROM() {
+  return eeprom;
 }

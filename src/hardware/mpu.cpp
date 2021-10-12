@@ -94,7 +94,7 @@ int MPU::calibrateBearing()
     IMU.magbias[1] = (float)mag_bias[1] * IMU.mRes * IMU.magCalibration[1];
     IMU.magbias[2] = (float)mag_bias[2] * IMU.mRes * IMU.magCalibration[2];
   }
-  storeMagBiasEEPROM(IMU.magbias);
+  HAL::getInstance()->getEEPROM()->storeMagBiasEEPROM(IMU.magbias);
   return 1;
 }
 

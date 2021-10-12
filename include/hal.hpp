@@ -5,6 +5,7 @@
 class MPU;
 #include "mpu.hpp"
 #include "clock.hpp"
+#include "eeprom.hpp"
 
 class HAL {
   // singleton
@@ -20,12 +21,14 @@ class HAL {
     Battery* battery;
     MPU* mpu;
     Clock* clock;
+    Eeprom* eeprom;
   
   // getter
   public:
     Battery* getBattery();
     MPU* getMPU();
     Clock* getClock();
+    Eeprom* getEEPROM();
 };
 
 #endif
