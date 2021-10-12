@@ -5,7 +5,8 @@ void pageBattery(bool initialLoad)
   if (initialLoad)
   {
     // deactivateWifi();
-    float voltage = getVoltage();
-    drawBattery(voltage, calcPercentage(voltage), isCharging());
+    Battery* bat = HAL::getInstance()->getBattery();
+    float voltage = bat->getVoltage();
+    drawBattery(voltage, bat->calcPercentage(voltage), bat->isCharging());
   }
 }

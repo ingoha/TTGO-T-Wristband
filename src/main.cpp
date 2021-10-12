@@ -6,14 +6,16 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include <rom/rtc.h>
+#include "hal.hpp"
 
 uint32_t last = millis();
 bool bus = false;
 
 void checkBus(void *param) {
+  Battery* bat = HAL::getInstance()->getBattery();
   for (;;) {
-    bus = getBusVoltage() > 4.0;
-    updateBatteryChargeStatus();
+    bus = bat->getBusVoltage() > 4.0;
+    bat->updateBatteryChargeStatus();
     vTaskDelay(1000 / portTICK_PERIOD_MS);
   }
 }
@@ -28,10 +30,11 @@ void setup() {
   tftInit();
   deactivateWifi();
   btStop();
-  setupADC();
+  //setupADC();
+  HAL::getInstance()->getBattery();
   initMPU();
   initButton();
-  setupBattery();
+  //setupBattery();
   Serial.println("START.");
 
   xTaskCreate(checkBus, "CheckBusVoltage", 1024, NULL, 1, NULL);

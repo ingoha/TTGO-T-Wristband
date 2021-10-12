@@ -524,11 +524,12 @@ bool drawCommon(uint8_t page, uint8_t pages) {
   tft.drawString((WiFiConnected() ? "W " : "") + String(current.year),
                  tft.width(), 45);
   tft.setTextDatum(TR_DATUM);
-  voltage = getVoltage();
-  bvoltage = getBusVoltage();
-  uint8_t percent = calcPercentage(voltage);
+  Battery* bat = HAL::getInstance()->getBattery();
+  voltage = bat->getVoltage();
+  bvoltage = bat->getBusVoltage();
+  uint8_t percent = bat->calcPercentage(voltage);
   tft.drawString(String(percent) + "% " + String(bvoltage, 2) + "V " +
-                     String(voltage, 2) + "V" + (isCharging() ? "+" : ""),
+                     String(voltage, 2) + "V" + (bat->isCharging() ? "+" : ""),
                  tft.width() + 3, 52);
   tft.setTextDatum(TC_DATUM);
   // tft.drawString(String(percent) + "%", tft.width() / 2, 52);

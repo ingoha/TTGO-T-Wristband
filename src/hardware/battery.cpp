@@ -1,30 +1,10 @@
 #include "battery.hpp"
 
-int vref = 1100;
-
-struct voltagePoint {
-    float max;
-    uint8_t per;
-};
-
-voltagePoint batteryCurve[] = {
-    { 4.20, 100 },
-    { 4.12, 97 },
-    { 4.10, 95 },
-    { 4.05, 90 },
-    { 3.95, 80 },
-    { 3.82, 60 },
-    { 3.75, 40 },
-    { 3.68, 20 },
-    { 3.60, 10 },
-    { 3.48, 5 },
-    { 3.30, 2 },
-    { 3.00, 0 },
-    { 0.00, 0 },
-};
 
 
-void setupADC() {
+
+
+void Battery::setupADC() {
     esp_adc_cal_characteristics_t adc_chars;
     esp_adc_cal_value_t val_type = esp_adc_cal_characterize((adc_unit_t)ADC_UNIT_1, (adc_atten_t)ADC1_CHANNEL_6, (adc_bits_width_t)ADC_WIDTH_BIT_12, 1100, &adc_chars);
     if (val_type == ESP_ADC_CAL_VAL_EFUSE_VREF)
@@ -33,24 +13,26 @@ void setupADC() {
     }
 }
 
-void setupBattery() {
+Battery::Battery() {
+    setupADC();
     pinMode(CHARGE_PIN, INPUT_PULLUP);
     pinMode(LED_PIN, OUTPUT);
+    vref = 1100;
 }
 
-float getVoltage() {
+const float Battery::getVoltage() {
     uint16_t v = analogRead(BATT_ADC_PIN);
     float battery_voltage = ((float)v / 4095.0) * 2.0 * 3.3 * (vref / 1000.0);
     return battery_voltage;
 }
 
-float getBusVoltage() {
+const float Battery::getBusVoltage() {
     uint16_t v = analogRead(VBUS_PIN);
     float bus_voltage = ((float)v / 4095.0) * 2.0 * 3.3 * (vref / 1000.0);
     return bus_voltage;
 }
 
-uint8_t calcPercentage(float voltage) {
+const uint8_t Battery::calcPercentage(float voltage) {
     // float percentage = (volts - BATTERY_MIN_V) * 100 / (BATTERY_MAX_V - BATTERY_MIN_V);
     if (voltage >= 4.2) { return 100; }
     if (voltage <= 3.0) { return 0; }
@@ -70,10 +52,10 @@ uint8_t calcPercentage(float voltage) {
 }
 
 // Set LED on if battery is charging
-void updateBatteryChargeStatus() {
+void Battery::updateBatteryChargeStatus() {
     digitalWrite(LED_PIN, isCharging());
 }
 
-bool isCharging() {
+const bool Battery::isCharging() {
     return !digitalRead(CHARGE_PIN);
 }

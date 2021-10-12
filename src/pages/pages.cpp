@@ -116,7 +116,9 @@ void refreshTimer() {
 }
 
 void handleUi() {
-    if (!isCharging()) { digitalWrite(LED_PIN, digitalRead(TP_PIN_PIN)); }
+    if (!HAL::getInstance()->getBattery()->isCharging()) { 
+        digitalWrite(LED_PIN, digitalRead(TP_PIN_PIN)); 
+    }
     /*
     tp_button.read();
     if (getBusVoltage() > 4.0) {

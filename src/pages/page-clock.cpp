@@ -52,6 +52,7 @@ void pageCalendar(bool initialLoad) {
 void pageClock(bool initialLoad) {
   RTC_Date current;
   float voltage;
+  Battery* bat = HAL::getInstance()->getBattery();
   if (initialLoad) {
     // deactivateWifi();
     clearScreen();
@@ -61,12 +62,13 @@ void pageClock(bool initialLoad) {
     oldMinute = current.minute;
     oldDay = current.day;
     clockRefresh = millis();
-    voltage = getVoltage();
-    displayBatteryValue(voltage, calcPercentage(voltage), isCharging());
-    drawBottomBar(calcPercentage(voltage), 0);
+    voltage = bat->getVoltage();
+    displayBatteryValue(voltage, bat->calcPercentage(voltage), bat->isCharging());
+    drawBottomBar(bat->calcPercentage(voltage), 0);
     oldVoltage = voltage;
     displayAppointments();
-  } else if (millis() - clockRefresh > 1000) {
+  } 
+  else if (millis() - clockRefresh > 1000) {
     clockRefresh = millis();
     current = getClockTime();
     colon = !colon;
@@ -80,10 +82,10 @@ void pageClock(bool initialLoad) {
     }
     oldMinute = current.minute;
     oldDay = current.day;
-    voltage = getVoltage();
+    voltage = bat->getVoltage();
     if (voltage != oldVoltage) {
-      displayBatteryValue(voltage, calcPercentage(voltage), isCharging());
-      drawBottomBar(calcPercentage(voltage), 0);
+      displayBatteryValue(voltage, bat->calcPercentage(voltage), bat->isCharging());
+      drawBottomBar(bat->calcPercentage(voltage), 0);
     }
     if (appointmentsUpdated) {
       displayAppointments();
@@ -148,7 +150,7 @@ void pageRtc(bool initialLoad) {
 }
 
 void actionClock() {
-  if (getBusVoltage() < 4.0) {
+  if (HAL::getInstance()->getBattery()->getBusVoltage() < 4.0) {
       msgInfo("NOT CHARGING");
       sleep(1);
       return;
