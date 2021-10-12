@@ -11,21 +11,22 @@ uint8_t requests = 0;
 
 void pageBearing(bool initialLoading)
 {
+  TFT* tft = HAL::getInstance()->getTFT();
   if (initialLoading)
   {
     // deactivateWifi();
-    initDrawBearing();
-    initDrawTemperature();
+    tft->initDrawBearing();
+    tft->initDrawTemperature();
     // initMPU();
     HAL::getInstance()->getMPU();
   }
   if (millis() - timeBearing > 300)
   {
     MPU* mpu = HAL::getInstance()->getMPU();
-    refreshDrawBearing(mpu->getBearing());
+    tft->refreshDrawBearing(mpu->getBearing());
     timeBearing = millis();
     float temperature = mpu->getTemperature();
-    refreshDrawTemperature(temperature);
+    tft->refreshDrawTemperature(temperature);
   }
 }
 

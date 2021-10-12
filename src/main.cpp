@@ -28,7 +28,8 @@ void setup() {
   //initClock();
   HAL::getInstance()->getClock();
   initWiFi();
-  tftInit();
+  //tftInit();
+  HAL::getInstance()->getTFT();
   deactivateWifi();
   btStop();
   // FIXME Das alles in eine HAL.init???

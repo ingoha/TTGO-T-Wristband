@@ -3,7 +3,6 @@
 #include <Arduino.h>
 #include "ntp.hpp"
 #include "hal.hpp"
-#include "wristband-tft.hpp"
 #include "wristband-wifi.hpp"
 #include "pages.hpp"
 

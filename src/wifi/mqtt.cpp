@@ -52,12 +52,13 @@ void MQTTonMessage(char *topic, char *opayload,
       saveStatus(payload);
   }
   static uint8_t n = 0;
+  TFT* tft = HAL::getInstance()->getTFT();
   if (strstr(topic, "appointment")) {
     if (payload[0] == ' ') {
       n = 0;
     }
     if (payload[0] == 'U') {
-      drawAppointments();
+      tft->drawAppointments();
     }
     if (payload[0] == 'T' && len > 14) {
         uint8_t hfrom = (payload[1] - '0') * 10 + payload[2] - '0';
@@ -76,7 +77,7 @@ void MQTTonMessage(char *topic, char *opayload,
     }
     return;
   }
-  status(payload, index);
+  tft->status(payload, index);
 }
 
 void MQTTonPublish(uint16_t id) {}

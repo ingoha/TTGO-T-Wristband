@@ -7,6 +7,7 @@ void pageBattery(bool initialLoad)
     // deactivateWifi();
     Battery* bat = HAL::getInstance()->getBattery();
     float voltage = bat->getVoltage();
-    drawBattery(voltage, bat->calcPercentage(voltage), bat->isCharging());
+    HAL::getInstance()->getTFT()->drawBattery(
+      voltage, bat->calcPercentage(voltage), bat->isCharging());
   }
 }

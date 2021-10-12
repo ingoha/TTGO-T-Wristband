@@ -37,14 +37,15 @@ void saveStatus(char* status) {
 }
 
 void actionCalendar() {
-      drawAppointments();
-      if (savedStatus[0] != '\0') { status(savedStatus, -1); }
+  TFT* tft = HAL::getInstance()->getTFT();
+  tft->drawAppointments();
+      if (savedStatus[0] != '\0') { tft->status(savedStatus, -1); }
 }
 
 void pageCalendar(bool initialLoad) {
   if (initialLoad) { calRefresh = 0; }
   if (millis() - calRefresh > 1000) {
-      drawAppointments();
+      HAL::getInstance()->getTFT()->drawAppointments();
       calRefresh = millis();
   }
 }
@@ -54,48 +55,49 @@ void pageClock(bool initialLoad) {
   float voltage;
   Battery* bat = HAL::getInstance()->getBattery();
   Clock* clk = HAL::getInstance()->getClock();
+  TFT* tft = HAL::getInstance()->getTFT();
   if (initialLoad) {
     // deactivateWifi();
-    clearScreen();
+    tft->clearScreen();
     current = clk->getClockTime();
-    displayDate(current.day, current.month, current.year, false);
-    colonX = displayHour(current.hour, current.minute, false);
+    HAL::getInstance()->getTFT()->displayDate(current.day, current.month, current.year, false);
+    colonX = HAL::getInstance()->getTFT()->displayHour(current.hour, current.minute, false);
     oldMinute = current.minute;
     oldDay = current.day;
     clockRefresh = millis();
     voltage = bat->getVoltage();
-    displayBatteryValue(voltage, bat->calcPercentage(voltage), bat->isCharging());
-    drawBottomBar(bat->calcPercentage(voltage), 0);
+    tft->displayBatteryValue(voltage, bat->calcPercentage(voltage), bat->isCharging());
+    tft->drawBottomBar(bat->calcPercentage(voltage), 0);
     oldVoltage = voltage;
-    displayAppointments();
+    tft->displayAppointments();
   } 
   else if (millis() - clockRefresh > 1000) {
     clockRefresh = millis();
     current = clk->getClockTime();
     colon = !colon;
-    displayColon(colonX, colon, false);
+    tft->displayColon(colonX, colon, false);
     if (oldMinute != current.minute) {
-      colonX = displayHour(current.hour, current.minute, false);
+      colonX = tft->displayHour(current.hour, current.minute, false);
     }
     if (oldDay != current.day) {
-      displayAppointments();
-      displayDate(current.day, current.month, current.year, false);
+      tft->displayAppointments();
+      tft->displayDate(current.day, current.month, current.year, false);
     }
     oldMinute = current.minute;
     oldDay = current.day;
     voltage = bat->getVoltage();
     if (voltage != oldVoltage) {
-      displayBatteryValue(voltage, bat->calcPercentage(voltage), bat->isCharging());
-      drawBottomBar(bat->calcPercentage(voltage), 0);
+      tft->displayBatteryValue(voltage, bat->calcPercentage(voltage), bat->isCharging());
+      tft->drawBottomBar(bat->calcPercentage(voltage), 0);
     }
     if (appointmentsUpdated) {
-      displayAppointments();
+      tft->displayAppointments();
       appointmentsUpdated = false;
     }
     oldVoltage = voltage;
     int8_t wifi = WiFi.status() == WL_CONNECTED ? 1 : 0;
     if (wifi != oldWifi) {
-      drawStatus('W', wifi > 0, 10);
+      tft->drawStatus('W', wifi > 0, 10);
       oldWifi = wifi;
     }
   }
@@ -104,12 +106,13 @@ void pageClock(bool initialLoad) {
 void pageRtc(bool initialLoad) {
   RTC_Date current;
   Clock* clk = HAL::getInstance()->getClock();
+  TFT* tft = HAL::getInstance()->getTFT();
   if (initialLoad) {
     // deactivateWifi();
-    clearScreen();
+    tft->clearScreen();
     current = clk->getUTCTime();
-    displayDate(current.day, current.month, current.year, true);
-    colonXUTC = displayHour(current.hour, current.minute, true);
+    tft->displayDate(current.day, current.month, current.year, true);
+    colonXUTC = tft->displayHour(current.hour, current.minute, true);
     oldMinuteUTC = current.minute;
     oldDayUTC = current.day;
     clockRefresh = millis();
@@ -117,12 +120,12 @@ void pageRtc(bool initialLoad) {
     clockRefresh = millis();
     current = clk->getUTCTime();
     colonUTC = !colonUTC;
-    displayColon(colonXUTC, colonUTC, true);
+    tft->displayColon(colonXUTC, colonUTC, true);
     if (oldMinuteUTC != current.minute) {
-      colonXUTC = displayHour(current.hour, current.minute, true);
+      colonXUTC = tft->displayHour(current.hour, current.minute, true);
     }
     if (oldDayUTC != current.day) {
-      displayDate(current.day, current.month, current.year, true);
+      tft->displayDate(current.day, current.month, current.year, true);
     }
     oldMinuteUTC = current.minute;
     oldDayUTC = current.day;
@@ -146,22 +149,23 @@ void pageRtc(bool initialLoad) {
     if (gramsAdd < 0) {
       gramsAdd = 0;
     }
-    displayCounter(grams, gramsAdd, grams / (MASS * PER_M));
+    tft->displayCounter(grams, gramsAdd, grams / (MASS * PER_M));
     clk->saveTime();
   }
 }
 
 void actionClock() {
+  TFT* tft = HAL::getInstance()->getTFT();
   if (HAL::getInstance()->getBattery()->getBusVoltage() < 4.0) {
-      msgInfo("NOT CHARGING");
+      tft->msgInfo("NOT CHARGING");
       sleep(1);
       return;
   }
   activateWifi();
-  msgInfo("UPDATING TIME...");
+  tft->msgInfo("UPDATING TIME...");
   syncTime();
   // deactivateWifi();
-  msgSuccess("TIME UPDATED");
+  tft->msgSuccess("TIME UPDATED");
   sleep(3);
 }
 

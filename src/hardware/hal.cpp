@@ -7,6 +7,7 @@ HAL::HAL() {
   mpu = new MPU();
   clock = new Clock();
   eeprom = new Eeprom();
+  tft = new TFT();
 }
 
 HAL* HAL::getInstance() {
@@ -30,4 +31,8 @@ Clock* HAL::getClock() {
 
 Eeprom* HAL::getEEPROM() {
   return eeprom;
+}
+
+TFT* HAL::getTFT() {
+  return tft;
 }

@@ -5,7 +5,8 @@ void handleSleep(bool showMsg) {
     digitalWrite(LED_PIN, LOW);
     //mpuSleep();
     HAL::getInstance()->getMPU()->mpuSleep();
-    tftSleep(false);
+    //tftSleep(false);
+    HAL::getInstance()->getTFT()->sleep(false);
     deactivateWifi();
     //rtcSleep();
     HAL::getInstance()->getClock()->rtcSleep();

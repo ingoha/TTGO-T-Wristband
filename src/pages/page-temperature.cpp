@@ -16,7 +16,7 @@ const char *options[] = {
 };
 
 void menuActionTest() {
-    msgInfo("Test");
+    HAL::getInstance()->getTFT()->msgInfo("Test");
     delay(2000);
     pageTemperature(true);
 }
@@ -40,41 +40,45 @@ Action pageActions[] = {
 
 void pageTemperature(bool initialLoading) {
     MPU* mpu = HAL::getInstance()->getMPU();
+    TFT* tft = HAL::getInstance()->getTFT();
     if (initialLoading) {
         // deactivateWifi();
         //initMPU();
-        initDrawQuaternion();
+        tft->initDrawQuaternion();
         pmenu = -1;
     }
     mpu->updateDMP();
     if (millis() - timeTemperature > 300) {
         // updateMPU();
         if (pmenu >= 0) {
-            drawBottomBar(getTimeout(), TFT_BLUE);
+            tft->drawBottomBar(getTimeout(), TFT_BLUE);
         } else {
             // refreshDrawQuaternion(getQuaternion());
             float q[7] = { 0, 0, 0, 0, 0, 0, 0 };
             mpu->getDMP(q);
-            refreshDrawQuaternion(q);
+            tft->refreshDrawQuaternion(q);
         }
         timeTemperature = millis();
     }
 }
 
 void actionTemperature() {
-  msgInfo("Calibrating MPU...");
+  TFT* tft = HAL::getInstance()->getTFT();
+  tft->msgInfo("Calibrating MPU...");
   //calibrateMPU();
   HAL::getInstance()->getMPU()->calibrateMPU();
-  msgInfo("MPU calibrated.");
+  tft->msgInfo("MPU calibrated.");
   sleep(5);
 }
 
 bool submenuTemperature(int8_t press) {
+    TFT* tft = HAL::getInstance()->getTFT();
+
     if (!press && pmenu < 0) { return false; }
     if (press && pmenu < 0) {
-        drawOptions(options);
+        tft->drawOptions(options);
         pmenu = 0;
-        drawMenuPointer(pmenu, OPTIONS_TEMPERATURE);
+        tft->drawMenuPointer(pmenu, OPTIONS_TEMPERATURE);
         return true;
     }
     if (press && pageActions[pmenu]) {
@@ -82,6 +86,6 @@ bool submenuTemperature(int8_t press) {
         return true;
     }
     if (!options[++pmenu]) { pmenu = 0; }
-    drawMenuPointer(pmenu, OPTIONS_TEMPERATURE);
+    tft->drawMenuPointer(pmenu, OPTIONS_TEMPERATURE);
     return true;
 }

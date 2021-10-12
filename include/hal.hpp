@@ -6,6 +6,8 @@ class MPU;
 #include "mpu.hpp"
 #include "clock.hpp"
 #include "eeprom.hpp"
+class TFT;
+#include "wristband-tft.hpp"
 
 class HAL {
   // singleton
@@ -22,6 +24,7 @@ class HAL {
     MPU* mpu;
     Clock* clock;
     Eeprom* eeprom;
+    TFT* tft;
   
   // getter
   public:
@@ -29,6 +32,7 @@ class HAL {
     MPU* getMPU();
     Clock* getClock();
     Eeprom* getEEPROM();
+    TFT* getTFT();
 };
 
 #endif

@@ -7,22 +7,23 @@ bool WiFiState = false;
 
 void WiFiEvent(WiFiEvent_t event, system_event_info_t info) {
     Serial.printf("[WIFI] Event: %d.\n", event);
+    TFT* tft = HAL::getInstance()->getTFT();
     switch (event) {
         case SYSTEM_EVENT_STA_CONNECTED:
             break;
         case SYSTEM_EVENT_STA_GOT_IP:
             if (!WiFiState) {
-                status("Connected.", -1);
+                tft->status("Connected.", -1);
                 startNetwork();
                 WiFiState = true;
             }
             break;
         case SYSTEM_EVENT_STA_DISCONNECTED:
             WiFiState = false;
-            status("Disconnected.", -1);
+            tft->status("Disconnected.", -1);
             break;
         default:
-            status("WiFi status: ", event);
+            tft->status("WiFi status: ", event);
     }
 }
 
@@ -33,8 +34,9 @@ bool WiFiConnected() {
 void configModeCallback(WiFiManager *myWiFiManager) {
     char apName[50] = " ";
     wifiManager.getConfigPortalSSID().toCharArray(apName, 50);
-    wifiManagerAdvice(apName);
-    status(apName, -1);
+    TFT* tft = HAL::getInstance()->getTFT();
+    tft->wifiManagerAdvice(apName);
+    tft->status(apName, -1);
 }
 
 void initWiFi() {
@@ -64,7 +66,7 @@ void setupWiFi() {
 void activateWifi() {
     // if (WiFiState) { return; }
     if (WiFi.status() == WL_CONNECTED) { return; }
-    status("Connecting to WiFi...", -1);
+    HAL::getInstance()->getTFT()->status("Connecting to WiFi...", -1);
     Serial.print("[WIFI] STA mode.\n");
     WiFi.mode(WIFI_STA);
     uint8_t t = 0;

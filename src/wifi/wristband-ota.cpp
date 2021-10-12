@@ -17,7 +17,7 @@ void setupOTA()
                 type = "filesystem";
               Serial.println("Start updating " + type);
               otaStart = true;
-              updatingText();
+              HAL::getInstance()->getTFT()->updatingText();
             })
       .onEnd([]() {
         Serial.println("\nEnd");
@@ -27,7 +27,7 @@ void setupOTA()
       .onProgress([](unsigned int progress, unsigned int total) {
         int percentage = (progress / (total / 100));
         // drawProgressBar(10, 30, 120, 15, percentage, TFT_WHITE, TFT_BLUE);
-        drawOTA(percentage);
+        HAL::getInstance()->getTFT()->drawOTA(percentage);
         digitalWrite(LED_PIN, !digitalRead(LED_PIN));
       })
       .onError([](ota_error_t error) {
@@ -43,7 +43,7 @@ void setupOTA()
           Serial.println("Receive Failed");
         else if (error == OTA_END_ERROR)
           Serial.println("End Failed");
-        msgWarning("UPDATE FAILED!");
+        HAL::getInstance()->getTFT()->msgWarning("UPDATE FAILED!");
         delay(3000);
         otaStart = false;
         home();

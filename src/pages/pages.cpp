@@ -148,14 +148,15 @@ void increasePage() {
 }
 
 void showPage() {
+    TFT* tft = HAL::getInstance()->getTFT();
     bool cleared = false;
     if (showCommon) {
-        cleared = drawCommon(page, pagesCount);
+        cleared = tft->drawCommon(page, pagesCount);
         showCommon = false;
     }
     if (submenus[page] && submenu(0)) {
             if (cleared) { submenu(-2); }
-            drawBottomBar(getTimeout(), TFT_BLUE);
+            tft->drawBottomBar(getTimeout(), TFT_BLUE);
             return;
     }
     if (pages[page]) {
@@ -190,18 +191,19 @@ void home() { page = 0; initialLoad = true; showPage(); }
 #define DmenuActions submenus[page]->actions
 
 bool submenu(int8_t press) {
+    TFT* tft = HAL::getInstance()->getTFT();
     if (press == -2) {
-        drawMenuPointer(menu, DmenuOptions[menu] != NULL);
-        drawOptions(DmenuOptions);
+        tft->drawMenuPointer(menu, DmenuOptions[menu] != NULL);
+        tft->drawOptions(DmenuOptions);
         return menu >= 0;
     }
     if (press < 0) { menu = -1; initialLoad = true; return false; }
     if (press == 0 && menu < 0) { return false; }
     if (!DmenuOptions[0]) { return false; }
     if (press == 2 && menu < 0) {
-        drawOptions(DmenuOptions);
+        tft->drawOptions(DmenuOptions);
         menu = 0;
-        drawMenuPointer(menu, DmenuOptions[menu] != NULL);
+        tft->drawMenuPointer(menu, DmenuOptions[menu] != NULL);
         return true;
     }
     if (menu < 0) { return false; }
@@ -210,7 +212,7 @@ bool submenu(int8_t press) {
         return true;
     }
     if (press == 2 && !DmenuActions[menu]) {
-        clearScreen();
+        tft->clearScreen();
         menu = -1;
         initialLoad = true;
         return false;
@@ -218,12 +220,12 @@ bool submenu(int8_t press) {
     if (press == 1) {
         menu++;
         if (DmenuOptions[menu]) {
-            drawMenuPointer(menu, DmenuOptions[menu] != NULL);
+            tft->drawMenuPointer(menu, DmenuOptions[menu] != NULL);
         }
     }
     if (!DmenuOptions[menu]) {
         menu = 0;
-        drawMenuPointer(menu, DmenuOptions[menu] != NULL);
+        tft->drawMenuPointer(menu, DmenuOptions[menu] != NULL);
     }
     // drawMenuPointer(menu, OPTIONS_TEMPERATURE);
     return true;
