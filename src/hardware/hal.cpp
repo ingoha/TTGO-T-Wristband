@@ -1,5 +1,6 @@
 #include "hal.hpp"
-#include "battery.hpp"
+
+HAL* HAL::instance = nullptr;
 
 HAL::HAL() {
   battery = new Battery();
@@ -18,4 +19,8 @@ Battery* HAL::getBattery() {
 
 MPU* HAL::getMPU() {
   return mpu;
+}
+
+Clock* HAL::getClock() {
+  return clock;
 }

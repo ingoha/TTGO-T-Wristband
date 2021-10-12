@@ -4,6 +4,7 @@
 #include "battery.hpp"
 class MPU;
 #include "mpu.hpp"
+#include "clock.hpp"
 
 class HAL {
   // singleton
@@ -18,12 +19,13 @@ class HAL {
   private:
     Battery* battery;
     MPU* mpu;
+    Clock* clock;
   
   // getter
   public:
     Battery* getBattery();
     MPU* getMPU();
+    Clock* getClock();
 };
 
-HAL* HAL::instance = nullptr;
 #endif
