@@ -15,3 +15,7 @@ HAL* HAL::getInstance() {
 Battery* HAL::getBattery() {
   return battery;
 }
+
+MPU* HAL::getMPU() {
+  return mpu;
+}
