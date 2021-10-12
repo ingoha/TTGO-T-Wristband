@@ -30,9 +30,11 @@ void setup() {
   tftInit();
   deactivateWifi();
   btStop();
+  // FIXME Das alles in eine HAL.init???
   //setupADC();
   HAL::getInstance()->getBattery();
-  initMPU();
+  //initMPU();
+  HAL::getInstance()->getMPU();
   initButton();
   //setupBattery();
   Serial.println("START.");

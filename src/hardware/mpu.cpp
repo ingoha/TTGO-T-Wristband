@@ -1,13 +1,7 @@
 #include "mpu.hpp"
 #include "quaternionFilters.hpp"
 
-MPU9250lib IMU;
-MPU9250_DMP imud; 
-
-float aBias[3]; float gBias[3]; float mCal[3];
-uint32_t lastUpdate = 0;
-
-void initMPU()
+MPU::MPU()
 {
   byte c = IMU.readByte(MPU9250_ADDRESS, WHO_AM_I_MPU9250);
   if (c == 0x71) {
@@ -19,7 +13,7 @@ void initMPU()
   }
 }
 
-void updateMPU() {
+void MPU::updateMPU() {
     int16_t aData[3];
     IMU.getAres(); IMU.readAccelData(aData);
     float ax = (float)aData[0] * IMU.aRes - aBias[0];
@@ -43,9 +37,9 @@ void updateMPU() {
     //
 }
 
-const float *getQuaternion() { return getQ(); }
+const float* MPU::getQuaternion() { return getQ(); }
 
-void mpuSleep()
+void MPU::mpuSleep()
 {
   IMU.writeBit(MPU9250_ADDRESS, PWR_MGMT_1, 5, false);
   IMU.writeBit(MPU9250_ADDRESS, PWR_MGMT_1, 6, false);
@@ -62,7 +56,7 @@ void mpuSleep()
   IMU.writeBit(MPU9250_ADDRESS, PWR_MGMT_1, 5, true);
 }
 
-int16_t getBearing()
+const int16_t MPU::getBearing()
 {
   IMU.readMagData(IMU.magCount); // Read the x/y/z adc values
   IMU.getMres();
@@ -76,7 +70,7 @@ int16_t getBearing()
   return (bearing > 0 ? bearing : (2 * PI + bearing)) * 360 / (2 * PI);
 }
 
-int calibrateBearing()
+int MPU::calibrateBearing()
 {
   uint16_t ii = 0, sample_count = 1500;
   int32_t mag_bias[3] = {0, 0, 0};
@@ -104,16 +98,16 @@ int calibrateBearing()
   return 1;
 }
 
-void calibrateMPU() { IMU.calibrateMPU9250(gBias, aBias); }
+void MPU::calibrateMPU() { IMU.calibrateMPU9250(gBias, aBias); }
 
-float getTemperature()
+const float MPU::getTemperature()
 {
   int tempCount = IMU.readTempData();
   float temperature = ((float)tempCount) / 333.87 + 21.0;
   return temperature;
 }
 
-void gagewatchRead(float *q) {
+void MPU::gagewatchRead(float *q) {
   if (IMU.readByte(MPU9250_ADDRESS, INT_STATUS) & 0x01) {
     IMU.readAccelData(IMU.accelCount);  // Read the x/y/z adc values
     IMU.getAres();
@@ -213,7 +207,7 @@ void gagewatchRead(float *q) {
   } // if (IMU.delt_t > 20)
 }
 
-void updateDMP() {
+void MPU::updateDMP() {
     if (imud.fifoAvailable()) {
         if (imud.dmpUpdateFifo() == INV_SUCCESS) {
             imud.computeEulerAngles();
@@ -221,12 +215,12 @@ void updateDMP() {
     }
 }
 
-void getDMP(float *q) {
+void MPU::getDMP(float *q) {
     q[4] = imud.yaw;
     q[5] = imud.pitch;
     q[6] = imud.roll;
 }
 
-void imuSleep() {
+void MPU::imuSleep() {
   IMU.setSleepEnabled(true);
 }

@@ -2,6 +2,8 @@
 #define HAL_H
 
 #include "battery.hpp"
+class MPU;
+#include "mpu.hpp"
 
 class HAL {
   // singleton
@@ -15,10 +17,12 @@ class HAL {
   // components
   private:
     Battery* battery;
+    MPU* mpu;
   
   // getter
   public:
     Battery* getBattery();
+    MPU* getMPU();
 };
 
 HAL* HAL::instance = nullptr;

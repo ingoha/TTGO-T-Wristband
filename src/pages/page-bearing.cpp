@@ -16,13 +16,15 @@ void pageBearing(bool initialLoading)
     // deactivateWifi();
     initDrawBearing();
     initDrawTemperature();
-    initMPU();
+    // initMPU();
+    HAL::getInstance()->getMPU();
   }
   if (millis() - timeBearing > 300)
   {
-    refreshDrawBearing(getBearing());
+    MPU* mpu = HAL::getInstance()->getMPU();
+    refreshDrawBearing(mpu->getBearing());
     timeBearing = millis();
-    float temperature = getTemperature();
+    float temperature = mpu->getTemperature();
     refreshDrawTemperature(temperature);
   }
 }

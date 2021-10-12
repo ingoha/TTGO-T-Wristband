@@ -39,13 +39,14 @@ Action pageActions[] = {
 };
 
 void pageTemperature(bool initialLoading) {
+    MPU* mpu = HAL::getInstance()->getMPU();
     if (initialLoading) {
         // deactivateWifi();
-        initMPU();
+        //initMPU();
         initDrawQuaternion();
         pmenu = -1;
     }
-    updateDMP();
+    mpu->updateDMP();
     if (millis() - timeTemperature > 300) {
         // updateMPU();
         if (pmenu >= 0) {
@@ -53,7 +54,7 @@ void pageTemperature(bool initialLoading) {
         } else {
             // refreshDrawQuaternion(getQuaternion());
             float q[7] = { 0, 0, 0, 0, 0, 0, 0 };
-            getDMP(q);
+            mpu->getDMP(q);
             refreshDrawQuaternion(q);
         }
         timeTemperature = millis();
@@ -62,7 +63,8 @@ void pageTemperature(bool initialLoading) {
 
 void actionTemperature() {
   msgInfo("Calibrating MPU...");
-  calibrateMPU();
+  //calibrateMPU();
+  HAL::getInstance()->getMPU()->calibrateMPU();
   msgInfo("MPU calibrated.");
   sleep(5);
 }
