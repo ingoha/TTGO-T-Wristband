@@ -227,6 +227,6 @@ void getDMP(float *q) {
     q[6] = imud.roll;
 }
 
-void mpuSleep() {
+void imuSleep() {
   IMU.setSleepEnabled(true);
 }
