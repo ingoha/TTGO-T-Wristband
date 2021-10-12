@@ -26,3 +26,4 @@ void calibrateMPU();
 void gagewatchRead(float *q);
 void updateDMP();
 void getDMP(float *q);
+void imuSleep();
