@@ -1,21 +1,12 @@
 #include "clock.hpp"
 
-PCF8563_Class rtc;
-
-uint8_t current_dayweek = 8;
-uint8_t current_minute = 0;
-
-String dayNames[] = { "ND", "PN", "WT", "SR", "CZ", "PT", "SO", "ND", "\0" };
-
-RTC_DATA_ATTR time_t saved;
-
-void initClock()
+Clock::Clock()
 {
   rtc.begin(Wire);
   rtc.check();
 }
 
-void rtcSleep()
+void Clock::rtcSleep()
 {
   rtc.clearTimer();
   rtc.resetAlarm();
@@ -24,24 +15,24 @@ void rtcSleep()
   rtc.disableTimer();
 }
 
-int getClockDay() {
+const int Clock::getClockDay() {
   RTC_Date now = rtc.getDateTime();
   return rtc.getDayOfWeek(now.day, now.month, now.year);
 }
 
-String getClockDayName() {
+const String Clock::getClockDayName() {
   uint8_t wd = getClockDay();
   if (dayNames[wd] && dayNames[wd][0]) { return dayNames[wd]; }
   return String();
 }
 
-RTC_Date getClockTime()
+RTC_Date Clock::getClockTime()
 {
   RTC_Date now = rtc.getDateTime();
   return now;
 }
 
-time_t getTime() {
+const time_t Clock::getTime() {
   tm saved;
   RTC_Date now = rtc.getDateTime();
   saved.tm_hour = now.hour - (isDST(now) ? 2 : 1);
@@ -54,15 +45,15 @@ time_t getTime() {
   return mktime(&saved);
 }
 
-void saveTime() {
+void Clock::saveTime() {
   saved = getTime();
 }
 
-double diffTime() {
+const double Clock::diffTime() {
   return difftime(getTime(), saved);
 }
 
-RTC_Date getUTCTime()
+RTC_Date Clock::getUTCTime()
 {
   RTC_Date now = rtc.getDateTime();
   tm timeStructure;
@@ -86,12 +77,12 @@ RTC_Date getUTCTime()
   return RTC_Date(gmtStructure->tm_year + 1900, gmtStructure->tm_mon + 1, gmtStructure->tm_mday, gmtStructure->tm_hour, gmtStructure->tm_min, gmtStructure->tm_sec);
 }
 
-void setTime(RTC_Date datetime)
+void Clock::setTime(RTC_Date datetime)
 {
   rtc.setDateTime(datetime);
 }
 
-bool isDST(RTC_Date now)
+const bool Clock::isDST(RTC_Date now)
 {
   uint8_t dayOfWeek = rtc.getDayOfWeek(now.day, now.month, now.year);
   if (now.month < 3 || now.month > 10)

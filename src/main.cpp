@@ -25,7 +25,8 @@ void setup() {
   setCpuFrequencyMhz(80);
   Wire.begin(I2C_SDA_PIN, I2C_SCL_PIN);
   Wire.setClock(400000);
-  initClock();
+  //initClock();
+  HAL::getInstance()->getClock();
   initWiFi();
   tftInit();
   deactivateWifi();

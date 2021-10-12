@@ -53,10 +53,11 @@ void pageClock(bool initialLoad) {
   RTC_Date current;
   float voltage;
   Battery* bat = HAL::getInstance()->getBattery();
+  Clock* clk = HAL::getInstance()->getClock();
   if (initialLoad) {
     // deactivateWifi();
     clearScreen();
-    current = getClockTime();
+    current = clk->getClockTime();
     displayDate(current.day, current.month, current.year, false);
     colonX = displayHour(current.hour, current.minute, false);
     oldMinute = current.minute;
@@ -70,7 +71,7 @@ void pageClock(bool initialLoad) {
   } 
   else if (millis() - clockRefresh > 1000) {
     clockRefresh = millis();
-    current = getClockTime();
+    current = clk->getClockTime();
     colon = !colon;
     displayColon(colonX, colon, false);
     if (oldMinute != current.minute) {
@@ -102,10 +103,11 @@ void pageClock(bool initialLoad) {
 
 void pageRtc(bool initialLoad) {
   RTC_Date current;
+  Clock* clk = HAL::getInstance()->getClock();
   if (initialLoad) {
     // deactivateWifi();
     clearScreen();
-    current = getUTCTime();
+    current = clk->getUTCTime();
     displayDate(current.day, current.month, current.year, true);
     colonXUTC = displayHour(current.hour, current.minute, true);
     oldMinuteUTC = current.minute;
@@ -113,7 +115,7 @@ void pageRtc(bool initialLoad) {
     clockRefresh = millis();
   } else if (millis() - clockRefresh > 1000) {
     clockRefresh = millis();
-    current = getUTCTime();
+    current = clk->getUTCTime();
     colonUTC = !colonUTC;
     displayColon(colonXUTC, colonUTC, true);
     if (oldMinuteUTC != current.minute) {
@@ -126,10 +128,10 @@ void pageRtc(bool initialLoad) {
     oldDayUTC = current.day;
 
     if (grams > 0) {
-      grams -= (10 * diffTime()) / 3600;
+      grams -= (10 * clk->diffTime()) / 3600;
     }
     if (gramsAdd > 0) {
-      float add = (0.5 * diffTime()) / 60;
+      float add = (0.5 * clk->diffTime()) / 60;
       if (gramsAdd >= add) {
         grams += add;
         gramsAdd -= add;
@@ -145,7 +147,7 @@ void pageRtc(bool initialLoad) {
       gramsAdd = 0;
     }
     displayCounter(grams, gramsAdd, grams / (MASS * PER_M));
-    saveTime();
+    clk->saveTime();
   }
 }
 
@@ -157,7 +159,7 @@ void actionClock() {
   }
   activateWifi();
   msgInfo("UPDATING TIME...");
-  setTime(syncTime());
+  syncTime();
   // deactivateWifi();
   msgSuccess("TIME UPDATED");
   sleep(3);

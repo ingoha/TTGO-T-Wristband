@@ -23,7 +23,7 @@ void MQTTonConnect(bool session) {
   mqttClient.subscribe("today/#", 2);
   // status("Connected.", 0);
   Serial.println("[MQTT] Subscribed.");
-  RTC_Date now = getClockTime();
+  RTC_Date now = HAL::getInstance()->getClock()->getClockTime();
   String snow = String(now.hour) + ":" + String(now.minute) + ":" + String(now.second);
   mqttClient.publish("esp/watch/band/1/self/connected", 0, false, snow.c_str());
 }

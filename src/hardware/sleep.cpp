@@ -7,7 +7,8 @@ void handleSleep(bool showMsg) {
     HAL::getInstance()->getMPU()->mpuSleep();
     tftSleep(false);
     deactivateWifi();
-    rtcSleep();
+    //rtcSleep();
+    HAL::getInstance()->getClock()->rtcSleep();
     //imuSleep();
     HAL::getInstance()->getMPU()->imuSleep();
     pinMode(39, GPIO_MODE_INPUT);

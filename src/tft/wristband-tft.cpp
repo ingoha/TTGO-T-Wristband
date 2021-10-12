@@ -444,7 +444,7 @@ void readRect(uint32_t x, uint32_t y, uint32_t w, uint32_t h, uint8_t *data) {
 }
 
 void drawAppointments() {
-  RTC_Date now = getClockTime();
+  RTC_Date now = HAL::getInstance()->getClock()->getClockTime();
   uint8_t t = TPOS(now.hour, now.minute);
   tft.drawLine(t, 65, t, tft.height(), 0x3186);
   for (uint8_t n = 0; n <= 3; n++) {
@@ -484,7 +484,7 @@ bool drawCommon(uint8_t page, uint8_t pages) {
   static int8_t oldMinute = -1;
   RTC_Date current;
   float voltage, bvoltage;
-  current = getClockTime();
+  current = HAL::getInstance()->getClock()->getClockTime();
   if (current.minute != oldMinute) {
     tft.fillScreen(TFT_BLACK);
     cleared = true;
@@ -512,7 +512,7 @@ bool drawCommon(uint8_t page, uint8_t pages) {
   tft.drawString(String(current.month < 10 ? "0" : "") + String(current.month) +
                      ".",
                  tft.width() - 1, 14);
-  tft.drawString(getClockDayName(), tft.width() - 1, 28);
+  tft.drawString(HAL::getInstance()->getClock()->getClockDayName(), tft.width() - 1, 28);
   /* if (lastError[0] != 0) {
     tft.setTextColor(TFT_RED, TFT_BLACK);
     tft.setTextColor(TFT_WHITE, TFT_BLACK);

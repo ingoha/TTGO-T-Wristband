@@ -5,11 +5,9 @@
 #include <Wire.h>
 #include <EEPROM.h>
 #include <rom/rtc.h>
-#include "hal.hpp"
 #include "MPU9250.hpp"
 #include "wristband-tft.hpp"
 #include "eeprom.hpp"
-#include "hal.hpp"
 
 #include "SparkFunMPU9250-DMP.h"
 
