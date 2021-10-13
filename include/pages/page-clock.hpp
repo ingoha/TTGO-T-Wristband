@@ -3,7 +3,6 @@
 #include <Arduino.h>
 #include "network.hpp"
 #include "hal.hpp"
-#include "wristband-wifi.hpp"
 #include "pages.hpp"
 
 void saveStatus(char* status);

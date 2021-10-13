@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include "wristband-ota.hpp"
-#include "wristband-wifi.hpp"
+#include "network.hpp"
 
 #include <TFT_eSPI.h>
 

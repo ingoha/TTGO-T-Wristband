@@ -25,18 +25,20 @@ void setup() {
   setCpuFrequencyMhz(80);
   Wire.begin(I2C_SDA_PIN, I2C_SCL_PIN);
   Wire.setClock(400000);
+  HAL* hal = HAL::getInstance();
+  WIFI* wifi = Network::getInstance()->getWIFI();
   //initClock();
-  HAL::getInstance()->getClock();
-  initWiFi();
+  hal->getClock();
+  wifi->initWiFi();
   //tftInit();
-  HAL::getInstance()->getTFT();
-  deactivateWifi();
+  hal->getTFT();
+  wifi->deactivateWifi();
   btStop();
   // FIXME Das alles in eine HAL.init???
   //setupADC();
-  HAL::getInstance()->getBattery();
+  hal->getBattery();
   //initMPU();
-  HAL::getInstance()->getMPU();
+  hal->getMPU();
   initButton();
   //setupBattery();
   Serial.println("START.");
@@ -46,7 +48,7 @@ void setup() {
 
 void loop() {
   if (bus) {
-    activateWifi();
+    Network::getInstance()->getWIFI()->activateWifi();
     setupOTA();
     while (otaRunning())
       usleep(10);

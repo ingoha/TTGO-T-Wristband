@@ -524,7 +524,7 @@ bool TFT::drawCommon(uint8_t page, uint8_t pages) {
   } */
   tft->setFreeFont(&TomThumb);
   tft->setTextDatum(TR_DATUM);
-  tft->drawString((WiFiConnected() ? "W " : "") + String(current.year),
+  tft->drawString((Network::getInstance()->getWIFI()->WiFiConnected() ? "W " : "") + String(current.year),
                  tft->width(), 45);
   tft->setTextDatum(TR_DATUM);
   Battery* bat = HAL::getInstance()->getBattery();

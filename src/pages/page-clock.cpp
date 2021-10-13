@@ -161,7 +161,7 @@ void actionClock() {
       sleep(1);
       return;
   }
-  activateWifi();
+  Network::getInstance()->getWIFI()->activateWifi();
   tft->msgInfo("UPDATING TIME...");
   Network::getInstance()->getNTP()->syncTime();
   // deactivateWifi();

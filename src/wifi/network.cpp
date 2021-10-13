@@ -4,6 +4,7 @@ Network* Network::instance = nullptr;
 
 Network::Network() {
   ntp = new Ntp();
+  wifi = new WIFI();
 }
 
 Network* Network::getInstance() {
@@ -15,4 +16,8 @@ Network* Network::getInstance() {
 
 Ntp* Network::getNTP() {
   return ntp;
+}
+
+WIFI* Network::getWIFI() {
+  return wifi;
 }

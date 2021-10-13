@@ -34,7 +34,8 @@ void waitOta() {
   unsigned long oldmilis = millis();
   unsigned long lastBar = millis();
   uint8_t lastTime = 100;
-  activateWifi();
+  WIFI* wifi = Network::getInstance()->getWIFI();
+  wifi->activateWifi();
   setupOTA();
   TFT_eSPI* tft = HAL::getInstance()->getTFT()->getInternalTFT();
 
@@ -81,6 +82,6 @@ void waitOta() {
     }
   }
   */
-  deactivateWifi();
+  wifi -> deactivateWifi();
   timeout = millis();
 }

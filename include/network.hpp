@@ -2,6 +2,8 @@
 #define NETWORK_H
 
 #include "ntp.hpp"
+#include "wristband-wifi.hpp"
+class WIFI;
 
 class Network {
   // singleton
@@ -15,10 +17,12 @@ class Network {
   // components
   private:
     Ntp* ntp;
+    WIFI* wifi;
   
   // getter
   public:
     Ntp* getNTP();
+    WIFI* getWIFI();
 };
 
 #endif
