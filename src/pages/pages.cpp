@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <EasyButton.h>
 #include "pages.hpp"
+#include "network.hpp"
 
 int8_t page = 0;
 EasyButton tp_button(TP_PIN_PIN, 80, true, false);
@@ -56,10 +57,18 @@ const char *menuOptions[] = {
 
 int8_t menu = -1;
 
-void sendPlay() { MQTTpublish("musiccmd", "play-pause"); }
-void sendNext() { MQTTpublish("musiccmd", "next"); }
-void sendPrev() { MQTTpublish("musiccmd", "previous"); }
-void sendStop() { MQTTpublish("musiccmd", "stop"); }
+void sendPlay() { 
+    Network::getInstance()->getMQTT()->MQTTpublish("musiccmd", "play-pause"); 
+}
+void sendNext() { 
+    Network::getInstance()->getMQTT()->MQTTpublish("musiccmd", "next");
+}
+void sendPrev() { 
+    Network::getInstance()->getMQTT()->MQTTpublish("musiccmd", "previous");
+}
+void sendStop() { 
+    Network::getInstance()->getMQTT()->MQTTpublish("musiccmd", "stop");
+}
 
 Action menuActions[] = {
     sendPlay,

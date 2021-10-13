@@ -1,42 +1,40 @@
 #include "mqtt.hpp"
 
-AsyncMqttClient mqttClient;
-
-void MQTTstatus(const char *payload) {
-    mqttClient.publish("esp/watch/band/1/self/status", 0, false, payload);
+MQTT::MQTT() {
+  mqttClient = new AsyncMqttClient();
 }
 
-void MQTTpublish(const char *topic, const char *payload) {
+void MQTT::MQTTstatus(const char *payload) {
+    mqttClient->publish("esp/watch/band/1/self/status", 0, false, payload);
+}
+
+void MQTT::MQTTpublish(const char *topic, const char *payload) {
     String t = "esp/watch/band/1/self/" + String(topic);
-    mqttClient.publish(t.c_str(), 0, false, payload);
+    mqttClient->publish(t.c_str(), 0, false, payload);
 }
 
-void MQTTonConnect(bool session) {
+void MQTT::onConnect(bool session) {
   Serial.println("[MQTT] Connected.");
-  mqttClient.subscribe("all/#", 2);
-  mqttClient.subscribe("esp/#", 2);
-  mqttClient.subscribe("esp/watch/#", 2);
-  mqttClient.subscribe("esp/watch/band/#", 2);
-  mqttClient.subscribe("esp/watch/band/1/#", 2);
-  mqttClient.subscribe("watch/#", 2);
-  mqttClient.subscribe("appointments/#", 2);
-  mqttClient.subscribe("today/#", 2);
+  mqttClient->subscribe("all/#", 2);
+  mqttClient->subscribe("esp/#", 2);
+  mqttClient->subscribe("esp/watch/#", 2);
+  mqttClient->subscribe("esp/watch/band/#", 2);
+  mqttClient->subscribe("esp/watch/band/1/#", 2);
+  mqttClient->subscribe("watch/#", 2);
+  mqttClient->subscribe("appointments/#", 2);
+  mqttClient->subscribe("today/#", 2);
   // status("Connected.", 0);
   Serial.println("[MQTT] Subscribed.");
   RTC_Date now = HAL::getInstance()->getClock()->getClockTime();
   String snow = String(now.hour) + ":" + String(now.minute) + ":" + String(now.second);
-  mqttClient.publish("esp/watch/band/1/self/connected", 0, false, snow.c_str());
+  mqttClient->publish("esp/watch/band/1/self/connected", 0, false, snow.c_str());
 }
 
-void MQTTonDisconnect(AsyncMqttClientDisconnectReason reason) {
+void MQTT::onDisconnect(AsyncMqttClientDisconnectReason reason) {
   Serial.println("[MQTT] Disconnected.");
 }
 
-void MQTTonSubscribe(uint16_t id, uint8_t qos) {}
-
-void MQTTonUnsubscribe(uint16_t id) {}
-
-void MQTTonMessage(char *topic, char *opayload,
+void MQTT::onMessage(char *topic, char *opayload,
                    AsyncMqttClientMessageProperties props, size_t len,
                    size_t index, size_t total) {
   char payload[32];
@@ -80,17 +78,20 @@ void MQTTonMessage(char *topic, char *opayload,
   tft->status(payload, index);
 }
 
-void MQTTonPublish(uint16_t id) {}
-
-void MQTTinit() {
-  mqttClient.onConnect(MQTTonConnect);
-  mqttClient.onDisconnect(MQTTonDisconnect);
-  mqttClient.onSubscribe(MQTTonSubscribe);
-  mqttClient.onUnsubscribe(MQTTonUnsubscribe);
-  mqttClient.onMessage(MQTTonMessage);
-  mqttClient.onPublish(MQTTonPublish);
-  mqttClient.setServer(IPAddress(BROKER), MQTTPORT);
+void MQTT::MQTTinit() {
+  mqttClient->onConnect([this](bool session) {
+    this -> onConnect(session);
+  });
+  mqttClient->onDisconnect([this](AsyncMqttClientDisconnectReason reason) {
+    this->onDisconnect(reason);
+  });
+  mqttClient->onMessage([this](char *topic, char *opayload,
+                   AsyncMqttClientMessageProperties props, size_t len,
+                   size_t index, size_t total) {
+    this->onMessage(topic, opayload, props, len, index, total);
+  });
+  mqttClient->setServer(IPAddress(BROKER), MQTTPORT);
   Serial.println("[MQTT] Setup done.");
 }
 
-void MQTTconnect() { mqttClient.connect(); }
+void MQTT::MQTTconnect() { mqttClient->connect(); }

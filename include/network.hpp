@@ -6,6 +6,8 @@
 class WIFI;
 #include "wristband-ota.hpp"
 class WifiOTA;
+#include "mqtt.hpp"
+class MQTT;
 
 class Network {
   // singleton
@@ -21,12 +23,14 @@ class Network {
     Ntp* ntp;
     WIFI* wifi;
     WifiOTA* ota;
+    MQTT* mqtt;
   
   // getter
   public:
     Ntp* getNTP();
     WIFI* getWIFI();
     WifiOTA* getWifiOTA();
+    MQTT* getMQTT();
 };
 
 #endif

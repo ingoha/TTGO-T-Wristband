@@ -6,6 +6,7 @@ Network::Network() {
   ntp = new Ntp();
   wifi = new WIFI();
   ota = new WifiOTA();
+  mqtt = new MQTT();
 }
 
 Network* Network::getInstance() {
@@ -25,4 +26,8 @@ WIFI* Network::getWIFI() {
 
 WifiOTA* Network::getWifiOTA() {
   return ota;
+}
+
+MQTT* Network::getMQTT() {
+  return mqtt;
 }

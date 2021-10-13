@@ -17,15 +17,17 @@ class WIFI {
     TFT* tft;
     bool WiFiState = false;
     AsyncWebServer* server;
-    
+    void WiFiEvent(WiFiEvent_t event, system_event_info_t info);
+    void configModeCallback(WiFiManager *myWiFiManager);
 
   public:
     WIFI();
     void setupWiFi();
-    void WiFiEvent(WiFiEvent_t event, system_event_info_t info);
-    void configModeCallback(WiFiManager *myWiFiManager);
     void activateWifi();
     void deactivateWifi();
+    //
+    // Starts network services (NTP, MQTT, Webserver etc.)
+    //
     void startNetwork();
     const bool WiFiConnected();
     void initWiFi();

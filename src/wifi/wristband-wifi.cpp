@@ -5,14 +5,6 @@ WIFI::WIFI() {
     server = new AsyncWebServer(80);
 }
 
-/*
-void WIFI::WifiEvent(WiFiEvent_t event, system_event_info_t info, 
-      void* this_pointer) {
-    WIFI* self = static_cast<WIFI*>(this_pointer);
-    self->_WiFiEvent(event, info);
-}
-*/
-
 void WIFI::WiFiEvent(WiFiEvent_t event, system_event_info_t info) {
     Serial.printf("[WIFI] Event: %d.\n", event);
     switch (event) {
@@ -41,21 +33,15 @@ void WIFI::configModeCallback(WiFiManager *myWiFiManager) {
     tft->status(apName, -1);
 }
 
-/*
-void WIFI::configModeCallback(WiFiManager *myWiFiManager, void* this_pointer) {
-    WIFI* self = static_cast<WIFI*>(this_pointer);
-    self->_configModeCallback(myWiFiManager);
-}
-*/
-
 const bool WIFI::WiFiConnected() {
     return WiFiState;
 }
 
 void WIFI::initWiFi() {
-    auto callback = std::bind(&WIFI::WiFiEvent, this, std::placeholders::_1, std::placeholders::_2);
-    WiFi.onEvent(callback);
-    MQTTinit();
+    WiFi.onEvent([this](WiFiEvent_t event, system_event_info_t info) {
+        this->WiFiEvent(event, info);
+    });
+    Network::getInstance()->getMQTT()->MQTTinit();
     server->on("/heap", HTTP_GET, [](AsyncWebServerRequest *request) {
         request->send(200, "text/plain", String(ESP.getFreeHeap()));
     });
@@ -69,8 +55,9 @@ void WIFI::initWiFi() {
 void WIFI::setupWiFi() {
     Serial.print("[WIFI] WM mode.\n");
     WiFiManager wifiManager;
-    auto callback = std::bind(&WIFI::configModeCallback, this, std::placeholders::_1);
-    wifiManager.setAPCallback(callback);
+    wifiManager.setAPCallback([this](WiFiManager *myWiFiManager) {
+        this->configModeCallback(myWiFiManager);
+    });
     wifiManager.setBreakAfterConfig(true);
     wifiManager.setConfigPortalTimeout(180);
     wifiManager.autoConnect("T-Wristband");
@@ -101,6 +88,6 @@ void WIFI::startNetwork() {
     Serial.println("Connected, network start.\n");
     HAL::getInstance()->getClock()->setTime(
         Network::getInstance()->getNTP()->syncTime());
-    MQTTconnect(); 
+    Network::getInstance()->getMQTT()->MQTTconnect(); 
     server->begin();
 }
