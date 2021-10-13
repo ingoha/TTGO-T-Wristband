@@ -5,6 +5,7 @@
 #include <vector>
 #include "hal.hpp"
 #include "network.hpp"
+#include "pages/abstractpage.hpp"
 
 //
 // this is the UI (controller) class
@@ -22,7 +23,7 @@ class Pages {
     bool showCommon = true;
     int8_t menu = -1;
     int timeOut[7] = { 8, 15, 15, 60, 30, 15, 0 };
-    std::vector<Pages*>* pageList;
+    std::vector<AbstractPage*>* pageList;
 
     HAL* hal;
     Network* network;

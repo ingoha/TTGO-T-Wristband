@@ -11,7 +11,7 @@ Pages::Pages() {
     hal = HAL::getInstance();
     network = Network::getInstance();
     tp_button = new EasyButton(TP_PIN_PIN, 80, true, false);
-    pageList = new std::vector<Pages*>();
+    pageList = new std::vector<AbstractPage*>();
     // FIXME really here?
     pageList->push_back(new PageBattery());
 }
@@ -105,8 +105,13 @@ void Pages::initButton() {
   pinMode(TP_PWR_PIN, PULLUP);
   digitalWrite(TP_PWR_PIN, HIGH);
   tp_button->begin();
-  //tp_button->onPressedFor(1000, handleAction);
-  //tp_button->onPressed(handlePress);
+  // cf. https://github.com/evert-arias/EasyButton/issues/56
+  tp_button->onPressedFor(1000, [this]() {
+		this->handleAction();
+	});
+  tp_button->onPressed([this]() {
+    this->handlePress();
+	});
   page = 0;
   showPage();
   //for (pagesCount = 0; (pages[pagesCount] || pages[pagesCount+1]) && pagesCount < 10; pagesCount++) {}
@@ -120,13 +125,11 @@ void Pages::handleUi() {
     if (!hal->getBattery()->isCharging()) { 
         digitalWrite(LED_PIN, digitalRead(TP_PIN_PIN)); 
     }
-    /*
-    tp_button.read();
-    if (getBusVoltage() > 4.0) {
+    tp_button->read();
+    if (hal->getBattery()->getBusVoltage() > 4.0) {
         if (!handlingAction) { showPage(); }
         return;
     }
-    */
     if (millis() - time_out > max_time_out && !handlingAction) {
         handleSleep(false);
     } else {
@@ -145,16 +148,13 @@ void Pages::handlePress() {
 void Pages::increasePage() {
     page++;
     initialLoad = true;
+    if(page >= pageList->size()) { page = 0; }
     //if (!pages[page] && !pages[page+1]) { page = 0; }
 }
 
 void Pages::showPage() {
     TFT* tft = hal->getTFT();
     bool cleared = false;
-    if (showCommon) {
-        cleared = tft->drawCommon(page, pagesCount);
-        showCommon = false;
-    }
     /*
     if (submenus[page] && submenu(0)) {
             if (cleared) { submenu(-2); }
@@ -162,18 +162,19 @@ void Pages::showPage() {
             return;
     }
     */
-    /*
-    if (pages[page]) {
+    if (pageList->at(page)) {
         max_time_out = timeOut[page] * 1000;
         if (max_time_out < 1000) { max_time_out = 10000; }
-        pages[page](cleared || initialLoad);
+        pageList->at(page)->draw(cleared || initialLoad);
         initialLoad = false;
     }
-    */
 }
 
 void Pages::handleAction() {
     handlingAction = true;
+    if(pageList->at(page)) {
+        pageList->at(page)->action();
+    }
     /*
     if (actions[page]) {
         actions[page]();
