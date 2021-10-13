@@ -1,6 +1,7 @@
 #include "pages/page-battery.hpp"
+#include "hal.hpp"
 
-void pageBattery(bool initialLoad)
+void PageBattery::draw(bool initialLoad)
 {
   if (initialLoad)
   {
@@ -10,4 +11,8 @@ void pageBattery(bool initialLoad)
     HAL::getInstance()->getTFT()->drawBattery(
       voltage, bat->calcPercentage(voltage), bat->isCharging());
   }
+}
+
+void PageBattery::action() {
+  
 }

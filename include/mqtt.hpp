@@ -2,9 +2,6 @@
 #define MYMQTT_H
 #include <WiFi.h>
 #include <AsyncMqttClient.h>
-#include "wristband-tft.hpp"
-#include "pages/page-clock.hpp"
-#include "calendar.hpp"
 
 class MQTT {
   private:

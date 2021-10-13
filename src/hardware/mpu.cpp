@@ -1,4 +1,5 @@
 #include "mpu.hpp"
+#include "hal.hpp"
 #include "quaternionFilters.hpp"
 
 MPU::MPU()

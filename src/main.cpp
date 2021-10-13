@@ -1,12 +1,10 @@
-#include "clock.hpp"
-#include "mpu.hpp"
-#include "pages.hpp"
-#include "wristband-ota.hpp"
-#include "wristband-tft.hpp"
 #include <Arduino.h>
 #include <Wire.h>
 #include <rom/rtc.h>
+#include "pages.hpp"
 #include "hal.hpp"
+#include "network.hpp"
+#include "pins.hpp"
 
 uint32_t last = millis();
 bool bus = false;
@@ -20,6 +18,8 @@ void checkBus(void *param) {
   }
 }
 
+Pages* pages;
+
 void setup() {
   Serial.begin(115200);
   setCpuFrequencyMhz(80);
@@ -27,6 +27,7 @@ void setup() {
   Wire.setClock(400000);
   HAL* hal = HAL::getInstance();
   WIFI* wifi = Network::getInstance()->getWIFI();
+  pages = new Pages();
   //initClock();
   hal->getClock();
   wifi->initWiFi();
@@ -39,7 +40,7 @@ void setup() {
   hal->getBattery();
   //initMPU();
   hal->getMPU();
-  initButton();
+  pages->initButton();
   //setupBattery();
   Serial.println("START.");
 
@@ -52,7 +53,7 @@ void loop() {
     Network::getInstance()->getWifiOTA()->setupOTA();
     while (Network::getInstance()->getWifiOTA()->otaRunning())
       usleep(10);
-    refreshTimer();
+    pages->refreshTimer();
   }
-  handleUi();
+  pages->handleUi();
 }

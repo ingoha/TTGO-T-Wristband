@@ -1,4 +1,8 @@
 #include "sleep.hpp"
+#include "pins.hpp"
+#include "hal.hpp"
+#include "network.hpp"
+
 
 void handleSleep(bool showMsg) {
     HAL* hal = HAL::getInstance();

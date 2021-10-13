@@ -1,18 +1,22 @@
 #include <Arduino.h>
 #include <EasyButton.h>
 #include "pages.hpp"
+#include "pins.hpp"
+#include "hal.hpp"
 #include "network.hpp"
+#include "pages/page-battery.hpp"
+#include "sleep.hpp"
 
-int8_t page = 0;
-EasyButton tp_button(TP_PIN_PIN, 80, true, false);
-uint32_t time_out = millis();
-uint16_t max_time_out = 15000;
-bool handlingAction = false;
-bool initialLoad = true;
-bool subMenu = false;
-int8_t pagesCount = 0;
-bool showCommon = true;
+Pages::Pages() {
+    hal = HAL::getInstance();
+    network = Network::getInstance();
+    tp_button = new EasyButton(TP_PIN_PIN, 80, true, false);
+    pageList = new std::vector<Pages*>();
+    // FIXME really here?
+    pageList->push_back(new PageBattery());
+}
 
+/*
 typedef void(*Page)(bool);
 Page pages[] = {
     pageCalendar,
@@ -27,7 +31,9 @@ Page pages[] = {
     NULL,
     NULL
 };
+*/
 
+/*
 typedef void(*Action)();
 Action actions[] = {
     actionCalendar, // NULL,
@@ -40,11 +46,12 @@ Action actions[] = {
     NULL,
     NULL
 };
+*/
 
 bool submenu(int8_t press);
 struct Submenu {
     const char **names;
-    Action *actions;
+    //Action *actions;
 };
 
 const char *menuOptions[] = {
@@ -55,7 +62,6 @@ const char *menuOptions[] = {
     NULL
 };
 
-int8_t menu = -1;
 
 void sendPlay() { 
     Network::getInstance()->getMQTT()->MQTTpublish("musiccmd", "play-pause"); 
@@ -70,6 +76,7 @@ void sendStop() {
     Network::getInstance()->getMQTT()->MQTTpublish("musiccmd", "stop");
 }
 
+/*
 Action menuActions[] = {
     sendPlay,
     sendNext,
@@ -92,40 +99,25 @@ Submenu *submenus[] = {
     NULL,
     NULL
 };
+*/
 
-int timeOut[] = { 8, 15, 15, 60, 30, 15, 0 };
-
-void commonLoop(void *param) {
-    for (;;) {
-        while (handlingAction) {
-            vTaskDelay(100 / portTICK_PERIOD_MS);
-        }
-        // drawCommon(page, pagesCount);
-        showCommon = true;
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
-    }
-}
-
-
-void initButton() {
+void Pages::initButton() {
   pinMode(TP_PWR_PIN, PULLUP);
   digitalWrite(TP_PWR_PIN, HIGH);
-  tp_button.begin();
-  tp_button.onPressedFor(1000, handleAction);
-  tp_button.onPressed(handlePress);
+  tp_button->begin();
+  //tp_button->onPressedFor(1000, handleAction);
+  //tp_button->onPressed(handlePress);
   page = 0;
   showPage();
-  for (pagesCount = 0; (pages[pagesCount] || pages[pagesCount+1]) && pagesCount < 10; pagesCount++) {}
-  Serial.printf("[RTOS] Task start: drawCommon.\n");
-  xTaskCreate(commonLoop, "DrawCommonPart", 2048, NULL, 1, NULL);
+  //for (pagesCount = 0; (pages[pagesCount] || pages[pagesCount+1]) && pagesCount < 10; pagesCount++) {}
 }
 
-void refreshTimer() {
+void Pages::refreshTimer() {
     time_out = millis();
 }
 
-void handleUi() {
-    if (!HAL::getInstance()->getBattery()->isCharging()) { 
+void Pages::handleUi() {
+    if (!hal->getBattery()->isCharging()) { 
         digitalWrite(LED_PIN, digitalRead(TP_PIN_PIN)); 
     }
     /*
@@ -138,64 +130,71 @@ void handleUi() {
     if (millis() - time_out > max_time_out && !handlingAction) {
         handleSleep(false);
     } else {
-        tp_button.read();
+        tp_button->read();
         if (!handlingAction) { showPage(); }
     }
 }
 
-void handlePress() {
+void Pages::handlePress() {
     time_out = millis();
-    if (submenus[page] && submenu(1)) { return; }
+    //if (submenus[page] && submenu(1)) { return; }
     initialLoad = true;
     increasePage();
 }
 
-void increasePage() {
+void Pages::increasePage() {
     page++;
     initialLoad = true;
-    if (!pages[page] && !pages[page+1]) { page = 0; }
+    //if (!pages[page] && !pages[page+1]) { page = 0; }
 }
 
-void showPage() {
-    TFT* tft = HAL::getInstance()->getTFT();
+void Pages::showPage() {
+    TFT* tft = hal->getTFT();
     bool cleared = false;
     if (showCommon) {
         cleared = tft->drawCommon(page, pagesCount);
         showCommon = false;
     }
+    /*
     if (submenus[page] && submenu(0)) {
             if (cleared) { submenu(-2); }
             tft->drawBottomBar(getTimeout(), TFT_BLUE);
             return;
     }
+    */
+    /*
     if (pages[page]) {
         max_time_out = timeOut[page] * 1000;
         if (max_time_out < 1000) { max_time_out = 10000; }
         pages[page](cleared || initialLoad);
         initialLoad = false;
     }
+    */
 }
 
-void handleAction() {
+void Pages::handleAction() {
     handlingAction = true;
+    /*
     if (actions[page]) {
         actions[page]();
         initialLoad = true;
     } else if (submenus[page]) {
         submenu(2);
     }
+    */
     handlingAction = false;
     time_out = millis();
 }
 
-uint8_t getTimeout() {
+const uint8_t Pages::getTimeout() {
     uint32_t t =  100 - ((millis() - time_out) * 100 / max_time_out);
     if (t > 100) { return 100; }
     return t;
 }
 
-void home() { page = 0; initialLoad = true; showPage(); }
+void Pages::home() { page = 0; initialLoad = true; showPage(); }
 
+/*
 #define DmenuOptions submenus[page]->names
 #define DmenuActions submenus[page]->actions
 
@@ -239,3 +238,4 @@ bool submenu(int8_t press) {
     // drawMenuPointer(menu, OPTIONS_TEMPERATURE);
     return true;
 }
+*/

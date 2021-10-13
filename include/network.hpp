@@ -3,11 +3,8 @@
 
 #include "ntp.hpp"
 #include "wristband-wifi.hpp"
-class WIFI;
 #include "wristband-ota.hpp"
-class WifiOTA;
 #include "mqtt.hpp"
-class MQTT;
 
 class Network {
   // singleton

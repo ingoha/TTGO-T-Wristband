@@ -6,8 +6,6 @@
 #include <EEPROM.h>
 #include <rom/rtc.h>
 #include "MPU9250.hpp"
-#include "wristband-tft.hpp"
-#include "eeprom.hpp"
 
 #include "SparkFunMPU9250-DMP.h"
 

@@ -1,4 +1,5 @@
 #include "wristband-tft.hpp"
+#include "pages/page-clock.hpp"
 
 TFT_eSPI* TFT::getInternalTFT() {
   return tft;
@@ -380,20 +381,6 @@ void TFT::refreshDrawQuaternion(const float *q) {
   tft->drawString(sroll, 40, 130, 2);
 }
 
-void TFT::displayAppointments() {
-  char status[16] = "- / - / -";
-  uint8_t today = 0;
-  uint8_t tomorrow = 0;
-  uint8_t week = 0;
-  if (false) {
-    sprintf(status, "%2u / %2u / %2u", today, tomorrow, week);
-  } // TODO
-  tft->setTextDatum(TC_DATUM);
-  // tft->setTextColor(TFT_GREEN, TFT_BLACK);
-  tft->setTextColor(today > 0 ? TFT_ORANGE : 0xFBE0, TFT_BLACK);
-  tft->drawString(status, tft->width() / 2, 120, 2);
-}
-
 uint8_t TFT::drawOptions(const char *options[]) {
   tft->fillScreen(TFT_BLACK);
   tft->setTextDatum(ML_DATUM);
@@ -444,42 +431,6 @@ void TFT::displayCounter(float counter, float add, float percent) {
 
 void TFT::readRect(uint32_t x, uint32_t y, uint32_t w, uint32_t h, uint8_t *data) {
   tft->readRectRGB(x, y, w, h, data);
-}
-
-void TFT::drawAppointments() {
-  RTC_Date now = HAL::getInstance()->getClock()->getClockTime();
-  uint8_t t = TPOS(now.hour, now.minute);
-  tft->drawLine(t, 65, t, tft->height(), 0x3186);
-  for (uint8_t n = 0; n <= 3; n++) {
-    Appointment ap = getAppointment(n);
-    if (ap.set) {
-      uint8_t y = 59 + n * 24;
-      if (n > 0) {
-        // tft->drawLine(0, y, tft->width(), y, TFT_WHITE);
-      }
-      tft->setFreeFont(&Orbitron_Light5pt7b);
-      tft->setTextColor(TFT_WHITE, TFT_BLACK);
-      tft->setTextDatum(TL_DATUM);
-      tft->drawString(ap.name, 0, y + 1);
-      tft->setFreeFont(&TomThumb);
-      tft->setTextDatum(TL_DATUM);
-      tft->drawString(ap.place, 0, y + 14);
-      tft->setTextDatum(TR_DATUM);
-      tft->drawString(String(ap.hfrom) + ":" + SPAD(ap.mfrom) + "-" +
-                         String(ap.hto) + ":" + SPAD(ap.mto),
-                     tft->width(), y + 14);
-      tft->drawLine(0, y + 21, tft->width(), y + 21, TFT_BLACK);
-      if (ap.hfrom == 0 && ap.hto == 0 && ap.mfrom == 0 && ap.mto && 0) {
-        tft->drawLine(TPOS(0, 0), y + 21, TPOS(23, 59), y + 21, TFT_WHITE);
-      } else {
-        uint8_t tf = TPOS(ap.hfrom, ap.mfrom);
-        uint8_t tt = TPOS(ap.hto, ap.mto);
-        tft->drawLine(tf, y + 21, tt, y + 21, TFT_WHITE);
-        tft->drawLine(t, y + 21, t, y + 23,
-                     ((t >= tf) && (t <= tt)) ? TFT_CYAN : 0x3186);
-      }
-    }
-  }
 }
 
 bool TFT::drawCommon(uint8_t page, uint8_t pages) {

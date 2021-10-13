@@ -36,20 +36,6 @@ void saveStatus(char* status) {
     strncpy(savedStatus, status, 32);
 }
 
-void actionCalendar() {
-  TFT* tft = HAL::getInstance()->getTFT();
-  tft->drawAppointments();
-      if (savedStatus[0] != '\0') { tft->status(savedStatus, -1); }
-}
-
-void pageCalendar(bool initialLoad) {
-  if (initialLoad) { calRefresh = 0; }
-  if (millis() - calRefresh > 1000) {
-      HAL::getInstance()->getTFT()->drawAppointments();
-      calRefresh = millis();
-  }
-}
-
 void pageClock(bool initialLoad) {
   RTC_Date current;
   float voltage;
@@ -69,7 +55,6 @@ void pageClock(bool initialLoad) {
     tft->displayBatteryValue(voltage, bat->calcPercentage(voltage), bat->isCharging());
     tft->drawBottomBar(bat->calcPercentage(voltage), 0);
     oldVoltage = voltage;
-    tft->displayAppointments();
   } 
   else if (millis() - clockRefresh > 1000) {
     clockRefresh = millis();
@@ -80,7 +65,6 @@ void pageClock(bool initialLoad) {
       colonX = tft->displayHour(current.hour, current.minute, false);
     }
     if (oldDay != current.day) {
-      tft->displayAppointments();
       tft->displayDate(current.day, current.month, current.year, false);
     }
     oldMinute = current.minute;
@@ -91,7 +75,6 @@ void pageClock(bool initialLoad) {
       tft->drawBottomBar(bat->calcPercentage(voltage), 0);
     }
     if (appointmentsUpdated) {
-      tft->displayAppointments();
       appointmentsUpdated = false;
     }
     oldVoltage = voltage;

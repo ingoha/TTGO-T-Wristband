@@ -1,4 +1,6 @@
 #include "mqtt.hpp"
+#include "hal.hpp"
+#include "pages/page-clock.hpp"
 
 MQTT::MQTT() {
   mqttClient = new AsyncMqttClient();
@@ -51,6 +53,7 @@ void MQTT::onMessage(char *topic, char *opayload,
   }
   static uint8_t n = 0;
   TFT* tft = HAL::getInstance()->getTFT();
+  /*
   if (strstr(topic, "appointment")) {
     if (payload[0] == ' ') {
       n = 0;
@@ -75,6 +78,7 @@ void MQTT::onMessage(char *topic, char *opayload,
     }
     return;
   }
+  */
   tft->status(payload, index);
 }
 

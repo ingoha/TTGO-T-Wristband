@@ -1,4 +1,7 @@
 #include "wristband-wifi.hpp"
+#include "hal.hpp"
+#include "network.hpp"
+#include "mqtt.hpp"
 
 WIFI::WIFI() {
     tft = HAL::getInstance()->getTFT();

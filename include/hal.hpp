@@ -2,11 +2,9 @@
 #define HAL_H
 
 #include "battery.hpp"
-class MPU;
 #include "mpu.hpp"
 #include "clock.hpp"
 #include "eeprom.hpp"
-class TFT;
 #include "wristband-tft.hpp"
 
 class HAL {

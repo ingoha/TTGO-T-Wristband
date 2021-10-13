@@ -1,4 +1,6 @@
 #include "pages/page-ota.hpp"
+#include "hal.hpp"
+//#include "Orbitron_Light_7.h"
 
 uint32_t timeout = 0;
 bool timeoutDrawn = false;

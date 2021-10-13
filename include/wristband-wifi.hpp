@@ -5,10 +5,7 @@
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
 #include <WiFiManager.h>
-#include "hal.hpp"
 class TFT;
-//#include "network.hpp"
-#include "mqtt.hpp"
 #include <ESPAsyncWebServer.h>
 
 class WIFI {

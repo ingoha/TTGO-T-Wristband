@@ -26,7 +26,7 @@ void menuBack() {
     pageTemperature(true);
 }
 
-
+/*
 typedef void(*Action)();
 Action pageActions[] = {
     waitOta,
@@ -37,6 +37,7 @@ Action pageActions[] = {
     menuBack,
     NULL,
 };
+*/
 
 void pageTemperature(bool initialLoading) {
     MPU* mpu = HAL::getInstance()->getMPU();
@@ -51,7 +52,7 @@ void pageTemperature(bool initialLoading) {
     if (millis() - timeTemperature > 300) {
         // updateMPU();
         if (pmenu >= 0) {
-            tft->drawBottomBar(getTimeout(), TFT_BLUE);
+            //tft->drawBottomBar(getTimeout(), TFT_BLUE);
         } else {
             // refreshDrawQuaternion(getQuaternion());
             float q[7] = { 0, 0, 0, 0, 0, 0, 0 };
@@ -81,10 +82,12 @@ bool submenuTemperature(int8_t press) {
         tft->drawMenuPointer(pmenu, OPTIONS_TEMPERATURE);
         return true;
     }
+    /*
     if (press && pageActions[pmenu]) {
         pageActions[pmenu]();
         return true;
     }
+    */
     if (!options[++pmenu]) { pmenu = 0; }
     tft->drawMenuPointer(pmenu, OPTIONS_TEMPERATURE);
     return true;

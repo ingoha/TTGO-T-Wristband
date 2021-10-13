@@ -1,4 +1,8 @@
+#include <ArduinoOTA.h>
 #include "wristband-ota.hpp"
+#include "pins.hpp"
+#include "hal.hpp"
+#include "pages.hpp"
 
 void WifiOTA::setupOTA()
 {
@@ -43,7 +47,8 @@ void WifiOTA::setupOTA()
         HAL::getInstance()->getTFT()->msgWarning("UPDATE FAILED!");
         delay(3000);
         this->otaStart = false;
-        home();
+        // FIXME
+        //Pages::getInstance()->home();
       });
 
   ArduinoOTA.begin();

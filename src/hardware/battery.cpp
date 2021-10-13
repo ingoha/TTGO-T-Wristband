@@ -1,8 +1,6 @@
 #include "battery.hpp"
-
-
-
-
+#include <esp_adc_cal.h>
+#include "pins.hpp"
 
 void Battery::setupADC() {
     esp_adc_cal_characteristics_t adc_chars;

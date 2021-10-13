@@ -1,9 +1,6 @@
 #ifndef BATTERY_H
 #define BATTERY_H
-
 #include <Arduino.h>
-#include <esp_adc_cal.h>
-#include "pins.hpp"
 
 class Battery {
   private:
