@@ -36,7 +36,8 @@ void waitOta() {
   uint8_t lastTime = 100;
   WIFI* wifi = Network::getInstance()->getWIFI();
   wifi->activateWifi();
-  setupOTA();
+  WifiOTA* ota = Network::getInstance()->getWifiOTA();
+  ota->setupOTA();
   TFT_eSPI* tft = HAL::getInstance()->getTFT()->getInternalTFT();
 
   tft->setFreeFont(&orbitron_light7pt7b);
@@ -46,7 +47,7 @@ void waitOta() {
   tft->drawString(String(ip[0]) + "." + String(ip[1]) + ".", tft->width() / 2, 70);
   tft->drawString(String(ip[2]) + "." + String(ip[3]), tft->width() / 2, 90);
   while (millis() - oldmilis < 30000) {
-    while (otaRunning()) { }
+    while (ota->otaRunning()) { }
     usleep(10);
     if (millis() - lastBar > 25) {
         uint32_t pass = 100 - ((millis() - oldmilis) / 300);

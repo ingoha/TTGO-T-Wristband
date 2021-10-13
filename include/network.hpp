@@ -4,6 +4,8 @@
 #include "ntp.hpp"
 #include "wristband-wifi.hpp"
 class WIFI;
+#include "wristband-ota.hpp"
+class WifiOTA;
 
 class Network {
   // singleton
@@ -18,11 +20,13 @@ class Network {
   private:
     Ntp* ntp;
     WIFI* wifi;
+    WifiOTA* ota;
   
   // getter
   public:
     Ntp* getNTP();
     WIFI* getWIFI();
+    WifiOTA* getWifiOTA();
 };
 
 #endif

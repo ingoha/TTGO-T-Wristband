@@ -1,22 +1,19 @@
 #include "wristband-ota.hpp"
 
-bool otaInit  = false;
-bool otaStart = false;
-
-void setupOTA()
+void WifiOTA::setupOTA()
 {
     if (otaInit) { return; }
   ArduinoOTA.setHostname("T-Wristband");
   ArduinoOTA.setPassword("wristbandpass");
 
-  ArduinoOTA.onStart([]() {
+  ArduinoOTA.onStart([this]() {
               String type;
               if (ArduinoOTA.getCommand() == U_FLASH)
                 type = "sketch";
               else // U_SPIFFS
                 type = "filesystem";
               Serial.println("Start updating " + type);
-              otaStart = true;
+              this->otaStart = true;
               HAL::getInstance()->getTFT()->updatingText();
             })
       .onEnd([]() {
@@ -30,7 +27,7 @@ void setupOTA()
         HAL::getInstance()->getTFT()->drawOTA(percentage);
         digitalWrite(LED_PIN, !digitalRead(LED_PIN));
       })
-      .onError([](ota_error_t error) {
+      .onError([this](ota_error_t error) {
         Serial.printf("Error[%u]: ", error);
         if (error == OTA_AUTH_ERROR)
           Serial.println("Auth Failed");
@@ -45,7 +42,7 @@ void setupOTA()
           Serial.println("End Failed");
         HAL::getInstance()->getTFT()->msgWarning("UPDATE FAILED!");
         delay(3000);
-        otaStart = false;
+        this->otaStart = false;
         home();
       });
 
@@ -53,7 +50,7 @@ void setupOTA()
   otaInit = true;
 }
 
-bool otaRunning() {
+const bool WifiOTA::otaRunning() {
     if (!otaInit) { return false; }
     ArduinoOTA.handle();
     return otaStart;

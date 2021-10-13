@@ -49,8 +49,8 @@ void setup() {
 void loop() {
   if (bus) {
     Network::getInstance()->getWIFI()->activateWifi();
-    setupOTA();
-    while (otaRunning())
+    Network::getInstance()->getWifiOTA()->setupOTA();
+    while (Network::getInstance()->getWifiOTA()->otaRunning())
       usleep(10);
     refreshTimer();
   }

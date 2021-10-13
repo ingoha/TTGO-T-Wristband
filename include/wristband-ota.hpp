@@ -5,6 +5,13 @@
 #include "wristband-tft.hpp"
 #include "pages.hpp"
 
-void setupOTA();
-bool otaRunning();
-String getOtaHostname();
+class WifiOTA {
+  private:
+    bool otaInit  = false;
+    bool otaStart = false;
+
+  public:
+    void setupOTA();
+    const bool otaRunning();
+    const String getOtaHostname();
+};
