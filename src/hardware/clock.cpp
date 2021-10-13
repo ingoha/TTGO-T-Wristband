@@ -2,22 +2,23 @@
 
 Clock::Clock()
 {
-  rtc.begin(Wire);
-  rtc.check();
+  rtc = new PCF8563_Class();
+  rtc->begin(Wire);
+  rtc->check();
 }
 
 void Clock::rtcSleep()
 {
-  rtc.clearTimer();
-  rtc.resetAlarm();
-  rtc.disableAlarm();
-  rtc.disableCLK();
-  rtc.disableTimer();
+  rtc->clearTimer();
+  rtc->resetAlarm();
+  rtc->disableAlarm();
+  rtc->disableCLK();
+  rtc->disableTimer();
 }
 
 const int Clock::getClockDay() {
-  RTC_Date now = rtc.getDateTime();
-  return rtc.getDayOfWeek(now.day, now.month, now.year);
+  RTC_Date now = rtc->getDateTime();
+  return rtc->getDayOfWeek(now.day, now.month, now.year);
 }
 
 const String Clock::getClockDayName() {
@@ -28,13 +29,13 @@ const String Clock::getClockDayName() {
 
 RTC_Date Clock::getClockTime()
 {
-  RTC_Date now = rtc.getDateTime();
+  RTC_Date now = rtc->getDateTime();
   return now;
 }
 
 const time_t Clock::getTime() {
   tm saved;
-  RTC_Date now = rtc.getDateTime();
+  RTC_Date now = rtc->getDateTime();
   saved.tm_hour = now.hour - (isDST(now) ? 2 : 1);
   saved.tm_min = now.minute;
   saved.tm_sec = now.second;
@@ -55,7 +56,7 @@ const double Clock::diffTime() {
 
 RTC_Date Clock::getUTCTime()
 {
-  RTC_Date now = rtc.getDateTime();
+  RTC_Date now = rtc->getDateTime();
   tm timeStructure;
   timeStructure.tm_hour = now.hour;
   timeStructure.tm_min = now.minute;
@@ -79,12 +80,12 @@ RTC_Date Clock::getUTCTime()
 
 void Clock::setTime(RTC_Date datetime)
 {
-  rtc.setDateTime(datetime);
+  rtc->setDateTime(datetime);
 }
 
 const bool Clock::isDST(RTC_Date now)
 {
-  uint8_t dayOfWeek = rtc.getDayOfWeek(now.day, now.month, now.year);
+  uint8_t dayOfWeek = rtc->getDayOfWeek(now.day, now.month, now.year);
   if (now.month < 3 || now.month > 10)
   {
     return false;

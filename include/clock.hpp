@@ -8,7 +8,7 @@
 
 class Clock {
   private:
-    PCF8563_Class rtc;
+    PCF8563_Class* rtc;
 
     uint8_t current_dayweek = 8;
     uint8_t current_minute = 0;
