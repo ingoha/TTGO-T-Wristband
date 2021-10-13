@@ -84,6 +84,7 @@ void deactivateWifi() {
 
 void startNetwork() {
     Serial.println("Connected, network start.\n");
-    HAL::getInstance()->getClock()->setTime(syncTime());
+    HAL::getInstance()->getClock()->setTime(
+        Network::getInstance()->getNTP()->syncTime());
     MQTTconnect(); server.begin();
 }

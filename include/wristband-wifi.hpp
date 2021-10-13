@@ -5,7 +5,8 @@
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
 #include <WiFiManager.h>
-#include "wristband-tft.hpp"
+#include "hal.hpp"
+#include "network.hpp"
 #include "mqtt.hpp"
 #include <ESPAsyncWebServer.h>
 

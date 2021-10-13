@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
-#include "ntp.hpp"
+#include "network.hpp"
 #include "hal.hpp"
 #include "wristband-wifi.hpp"
 #include "pages.hpp"

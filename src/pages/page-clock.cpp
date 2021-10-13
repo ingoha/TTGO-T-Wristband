@@ -163,7 +163,7 @@ void actionClock() {
   }
   activateWifi();
   tft->msgInfo("UPDATING TIME...");
-  syncTime();
+  Network::getInstance()->getNTP()->syncTime();
   // deactivateWifi();
   tft->msgSuccess("TIME UPDATED");
   sleep(3);
