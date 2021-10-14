@@ -5,6 +5,7 @@
 #include "hal.hpp"
 #include "network.hpp"
 #include "pages/page-battery.hpp"
+#include "pages/page-ota.hpp"
 #include "sleep.hpp"
 
 Pages::Pages() {
@@ -14,6 +15,7 @@ Pages::Pages() {
     pageList = new std::vector<AbstractPage*>();
     // FIXME really here?
     pageList->push_back(new PageBattery());
+    pageList->push_back(new PageOTA());
 }
 
 /*

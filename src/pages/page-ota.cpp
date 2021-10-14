@@ -1,13 +1,13 @@
 #include "pages/page-ota.hpp"
+#include <Arduino.h>
+#include <TFT_eSPI.h>
+#include "network.hpp"
 #include "hal.hpp"
 //#include "Orbitron_Light_7.h"
 
-uint32_t timeout = 0;
-bool timeoutDrawn = false;
-
-void pageOta(bool initialLoad)
+void PageOTA::draw(bool initialLoad)
 {
-  TFT_eSPI* tft = HAL::getInstance()->getTFT()->getInternalTFT();
+  TFT_eSPI* tft = hal->getTFT()->getInternalTFT();
   if (initialLoad) {
     // deactivateWifi();
     tft->setTextColor(TFT_WHITE, TFT_BLACK);
@@ -32,15 +32,19 @@ void pageOta(bool initialLoad)
   tft->setFreeFont(NULL);
 }
 
-void waitOta() {
+void PageOTA::action() {
+  waitOta();
+}
+
+void PageOTA::waitOta() {
   unsigned long oldmilis = millis();
   unsigned long lastBar = millis();
   uint8_t lastTime = 100;
-  WIFI* wifi = Network::getInstance()->getWIFI();
+  WIFI* wifi = network->getWIFI();
   wifi->activateWifi();
-  WifiOTA* ota = Network::getInstance()->getWifiOTA();
+  WifiOTA* ota = network->getWifiOTA();
   ota->setupOTA();
-  TFT_eSPI* tft = HAL::getInstance()->getTFT()->getInternalTFT();
+  TFT_eSPI* tft = hal->getTFT()->getInternalTFT();
 
   tft->setFreeFont(&orbitron_light7pt7b);
   tft->setTextDatum(TC_DATUM);
@@ -59,7 +63,7 @@ void waitOta() {
             tft->setFreeFont(&Orbitron_Light_24);
             tft->setTextDatum(TC_DATUM);
             tft->drawString(String(":") + String(left < 10 ? 0 : "") + String(left), tft->width() / 2, 110);
-            HAL::getInstance()->getTFT()->drawCommon(0, 0);
+            //hal->getTFT()->drawCommon(0, 0);
             lastTime = (uint8_t)left;
         }
     }

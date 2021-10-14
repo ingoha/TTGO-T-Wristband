@@ -1,8 +1,17 @@
-#include <Arduino.h>
-#include "wristband-ota.hpp"
-#include "network.hpp"
+#ifndef PAGE_OTA_H
+#define PAGE_OTA_H
+#include "pages.hpp"
+#include "abstractpage.hpp"
 
-#include <TFT_eSPI.h>
 
-void pageOta(bool initialLoad);
-void waitOta();
+class PageOTA : public Pages, public AbstractPage {
+  private:
+    uint32_t timeout = 0;
+    bool timeoutDrawn = false;
+    void waitOta();
+
+  public:
+    void draw(bool initialLoad);
+    void action();
+};
+#endif

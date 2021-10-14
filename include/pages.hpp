@@ -11,7 +11,7 @@
 // this is the UI (controller) class
 //
 class Pages {
-  private:
+  protected:
     int8_t page = 0;
     EasyButton* tp_button;
     uint32_t time_out = millis();
