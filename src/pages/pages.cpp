@@ -11,11 +11,18 @@
 Pages::Pages() {
     hal = HAL::getInstance();
     network = Network::getInstance();
+    Serial.println("Setup touch button...");
     tp_button = new EasyButton(TP_PIN_PIN, 80, true, false);
+    initButton();
+    
     pageList = new std::vector<AbstractPage*>();
     // FIXME really here?
-    pageList->push_back(new PageBattery());
-    pageList->push_back(new PageOTA());
+    pageList->push_back(new PageBattery(hal, network));
+    pageList->push_back(new PageOTA(hal, network));
+
+    page = 0;
+    showPage();
+    //for (pagesCount = 0; (pages[pagesCount] || pages[pagesCount+1]) && pagesCount < 10; pagesCount++) {}
 }
 
 /*
@@ -114,9 +121,6 @@ void Pages::initButton() {
   tp_button->onPressed([this]() {
     this->handlePress();
 	});
-  page = 0;
-  showPage();
-  //for (pagesCount = 0; (pages[pagesCount] || pages[pagesCount+1]) && pagesCount < 10; pagesCount++) {}
 }
 
 void Pages::refreshTimer() {
@@ -150,6 +154,7 @@ void Pages::handlePress() {
 void Pages::increasePage() {
     page++;
     initialLoad = true;
+    // FIXME auto sleep when increasing from last page???
     if(page >= pageList->size()) { page = 0; }
     //if (!pages[page] && !pages[page+1]) { page = 0; }
 }
@@ -176,6 +181,7 @@ void Pages::handleAction() {
     handlingAction = true;
     if(pageList->at(page)) {
         pageList->at(page)->action();
+        initialLoad = true;
     }
     /*
     if (actions[page]) {

@@ -1,6 +1,8 @@
 #ifndef HAL_H
 #define HAL_H
 
+#include <Wire.h>
+
 #include "battery.hpp"
 #include "mpu.hpp"
 #include "clock.hpp"

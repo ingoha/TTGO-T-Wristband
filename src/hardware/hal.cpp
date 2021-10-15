@@ -3,11 +3,13 @@
 HAL* HAL::instance = nullptr;
 
 HAL::HAL() {
-  battery = new Battery();
-  mpu = new MPU();
-  clock = new Clock();
-  eeprom = new Eeprom();
+  // FIXME: the init order in the reference code is:
+  //    tft, (wire), rtc, mpu, adc
   tft = new TFT();
+  clock = new Clock();
+  mpu = new MPU();
+  battery = new Battery();
+  eeprom = new Eeprom();
 }
 
 HAL* HAL::getInstance() {

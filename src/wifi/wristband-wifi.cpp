@@ -57,13 +57,13 @@ void WIFI::initWiFi() {
 
 void WIFI::setupWiFi() {
     Serial.print("[WIFI] WM mode.\n");
-    WiFiManager wifiManager;
-    wifiManager.setAPCallback([this](WiFiManager *myWiFiManager) {
+    wifiManager = new WiFiManager();
+    wifiManager->setAPCallback([this](WiFiManager *myWiFiManager) {
         this->configModeCallback(myWiFiManager);
     });
-    wifiManager.setBreakAfterConfig(true);
-    wifiManager.setConfigPortalTimeout(180);
-    wifiManager.autoConnect("T-Wristband");
+    wifiManager->setBreakAfterConfig(true);
+    wifiManager->setConfigPortalTimeout(180);
+    wifiManager->autoConnect("T-Wristband");
     sleep(1);
     if (WiFi.status() != WL_CONNECTED) { deactivateWifi(); }
 }

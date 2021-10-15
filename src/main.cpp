@@ -20,34 +20,41 @@ void checkBus(void *param) {
 
 Pages* pages;
 
+void debug(String msg)
+{
+  Serial.println(msg);
+}
+
 void setup() {
   Serial.begin(115200);
+  debug("Startup...");
   setCpuFrequencyMhz(80);
+  debug("Setup Wire...");
+  // FIXME Wire must be global for MPU library :-/
   Wire.begin(I2C_SDA_PIN, I2C_SCL_PIN);
   Wire.setClock(400000);
+  debug("Setup HAL...");
   HAL* hal = HAL::getInstance();
+
+  debug("Setup WIFI...");
   WIFI* wifi = Network::getInstance()->getWIFI();
-  pages = new Pages();
-  //initClock();
-  hal->getClock();
+  wifi->setupWiFi();
+  debug("Init WIFI...");
   wifi->initWiFi();
-  //tftInit();
-  hal->getTFT();
+  debug("Deactivate WIFI...");
   wifi->deactivateWifi();
+  debug("Stop BT...");
   btStop();
-  // FIXME Das alles in eine HAL.init???
-  //setupADC();
-  hal->getBattery();
-  //initMPU();
-  hal->getMPU();
-  pages->initButton();
-  //setupBattery();
+
+  debug("Setup UI...");
+  pages = new Pages();
   Serial.println("START.");
 
   xTaskCreate(checkBus, "CheckBusVoltage", 1024, NULL, 1, NULL);
 }
 
 void loop() {
+  debug("loop");
   if (bus) {
     Network::getInstance()->getWIFI()->activateWifi();
     Network::getInstance()->getWifiOTA()->setupOTA();
