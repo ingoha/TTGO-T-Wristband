@@ -5,9 +5,9 @@
 #include <SPI.h>
 #include <TFT_eSPI.h>
 
-#include "Orbitron_Light_5.h"
-#include "Orbitron_Light_6.h"
-#include "Orbitron_Light_7.h"
+#include "fonts/Orbitron_Light_5.h"
+#include "fonts/Orbitron_Light_6.h"
+#include "fonts/Orbitron_Light_7.h"
 
 #define TPOS(h,m) (4 + h * 3 + m / 20)
 #define SPAD(d) ((d < 10 ? "0" : "") + String(d))
