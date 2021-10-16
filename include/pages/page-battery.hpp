@@ -4,9 +4,6 @@
 
 class PageBattery : public AbstractPage{
   public:
-    // common constructor
-    PageBattery(HAL* h, Network* n);
-
     void draw(bool initialLoad);
     void action();
 };

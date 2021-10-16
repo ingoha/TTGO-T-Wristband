@@ -1,13 +1,6 @@
 #include "pages/page-ota.hpp"
 #include <Arduino.h>
 #include <TFT_eSPI.h>
-//#include "Orbitron_Light_7.h"
-
-PageOTA::PageOTA(HAL* h, Network* n)
-{
-  hal = h;
-  network = n;
-}
 
 void PageOTA::draw(bool initialLoad)
 {

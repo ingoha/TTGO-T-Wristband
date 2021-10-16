@@ -4,6 +4,7 @@
 #include "pins.hpp"
 #include "hal.hpp"
 #include "network.hpp"
+#include "pages/page-home.hpp"
 #include "pages/page-battery.hpp"
 #include "pages/page-ota.hpp"
 #include "sleep.hpp"
@@ -17,8 +18,9 @@ Pages::Pages() {
     
     pageList = new std::vector<AbstractPage*>();
     // FIXME really here?
-    pageList->push_back(new PageBattery(hal, network));
-    pageList->push_back(new PageOTA(hal, network));
+    pageList->push_back(new PageHome());
+    pageList->push_back(new PageBattery());
+    pageList->push_back(new PageOTA());
 
     page = 0;
     showPage();

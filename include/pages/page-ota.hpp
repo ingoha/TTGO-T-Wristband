@@ -9,9 +9,6 @@ class PageOTA : public AbstractPage {
     void waitOta();
 
   public:
-    // common constructor
-    PageOTA(HAL* h, Network* n);
-
     void draw(bool initialLoad);
     void action();
 };
