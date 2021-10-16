@@ -6,6 +6,8 @@
 #include "network.hpp"
 #include "pins.hpp"
 
+//#define DEBUG
+
 uint32_t last = millis();
 bool bus = false;
 
@@ -22,7 +24,9 @@ Pages* pages;
 
 void debug(String msg)
 {
+  #ifdef DEBUG
   Serial.println(msg);
+  #endif
 }
 
 void setup() {
