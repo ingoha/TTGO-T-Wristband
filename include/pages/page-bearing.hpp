@@ -1,16 +1,15 @@
+#ifndef PAGE_BEARING_H
+#define PAGE_BEARING_H
 #include <Arduino.h>
-#include "hal.hpp"
-#include "wristband-wifi.hpp"
+#include "pages/abstractpage.hpp"
 
-/*
-#include <WiFi.h>
-#include <HTTPSServer.hpp>
-#include <HTTPRequest.hpp>
-#include <HTTPResponse.hpp>
-#include <ResourceNode.hpp>
+class PageBearing : public AbstractPage {
+  private:
+    uint32_t timeBearing = millis();
+    uint8_t requests = 0;
 
-using namespace httpsserver;
-*/
-
-void pageBearing(bool initialLoading);
-void actionBearing();
+  public:
+    void draw(bool initialLoading);
+    void action();
+};
+#endif

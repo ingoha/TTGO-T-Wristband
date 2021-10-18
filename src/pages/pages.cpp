@@ -8,6 +8,7 @@
 #include "pages/page-battery.hpp"
 #include "pages/page-ota.hpp"
 #include "pages/page-temperature.hpp"
+#include "pages/page-bearing.hpp"
 #include "sleep.hpp"
 
 Pages::Pages() {
@@ -22,6 +23,7 @@ Pages::Pages() {
     pageList->push_back(new PageHome());
     pageList->push_back(new PageBattery());
     pageList->push_back(new PageTemperature());
+    pageList->push_back(new PageBearing());
     pageList->push_back(new PageOTA());
 
     page = 0;
