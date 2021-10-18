@@ -50,6 +50,17 @@ void PageHome::draw(bool initialLoad)
   }
 }
 
+// copied from actionClock
 void PageHome::action() {
-  
+  if (hal->getBattery()->getBusVoltage() < 4.0) {
+      hal->getTFT()->msgInfo("NOT CHARGING");
+      sleep(1);
+      return;
+  }
+  network->getWIFI()->activateWifi();
+  hal->getTFT()->msgInfo("UPDATING TIME...");
+  network->getNTP()->syncTime();
+  // deactivateWifi();
+  hal->getTFT()->msgSuccess("TIME UPDATED");
+  sleep(3);
 }
