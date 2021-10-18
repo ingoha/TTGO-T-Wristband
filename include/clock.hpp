@@ -15,7 +15,7 @@ class Clock {
 
     const String dayNames[9] = { "ND", "PN", "WT", "SR", "CZ", "PT", "SO", "ND", "\0" };
 
-    /*RTC_DATA_ATTR*/ time_t saved;
+    RTC_DATA_ATTR static time_t saved;
 
   public:
     //void initClock();
