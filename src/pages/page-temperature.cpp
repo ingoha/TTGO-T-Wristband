@@ -2,10 +2,7 @@
 
 #define OPTIONS_TEMPERATURE 6
 
-uint32_t timeTemperature = millis();
-int8_t pmenu = -1;
-
-const char *options[] = {
+const char *options[OPTIONS_TEMPERATURE + 1] = {
     "OTA",
     "Kalibruj",
     "Test",
@@ -14,17 +11,18 @@ const char *options[] = {
     "WSTECZ",
     NULL
 };
-
+/*
 void menuActionTest() {
     HAL::getInstance()->getTFT()->msgInfo("Test");
     delay(2000);
-    pageTemperature(true);
+    show(true);
 }
 
 void menuBack() {
-    pmenu = -1;
-    pageTemperature(true);
+    //pmenu = -1;
+    show(true);
 }
+*/
 
 /*
 typedef void(*Action)();
@@ -39,12 +37,11 @@ Action pageActions[] = {
 };
 */
 
-void pageTemperature(bool initialLoading) {
-    MPU* mpu = HAL::getInstance()->getMPU();
-    TFT* tft = HAL::getInstance()->getTFT();
+void PageTemperature::draw(bool initialLoading) {
+    MPU* mpu = hal->getMPU();
+    TFT* tft = hal->getTFT();
     if (initialLoading) {
         // deactivateWifi();
-        //initMPU();
         tft->initDrawQuaternion();
         pmenu = -1;
     }
@@ -63,17 +60,16 @@ void pageTemperature(bool initialLoading) {
     }
 }
 
-void actionTemperature() {
-  TFT* tft = HAL::getInstance()->getTFT();
+void PageTemperature::action() {
+  TFT* tft = hal->getTFT();
   tft->msgInfo("Calibrating MPU...");
-  //calibrateMPU();
-  HAL::getInstance()->getMPU()->calibrateMPU();
+  hal->getMPU()->calibrateMPU();
   tft->msgInfo("MPU calibrated.");
   sleep(5);
 }
 
-bool submenuTemperature(int8_t press) {
-    TFT* tft = HAL::getInstance()->getTFT();
+bool PageTemperature::submenu(int8_t press) {
+    TFT* tft = hal->getTFT();
 
     if (!press && pmenu < 0) { return false; }
     if (press && pmenu < 0) {

@@ -7,6 +7,7 @@
 #include "pages/page-home.hpp"
 #include "pages/page-battery.hpp"
 #include "pages/page-ota.hpp"
+#include "pages/page-temperature.hpp"
 #include "sleep.hpp"
 
 Pages::Pages() {
@@ -20,6 +21,7 @@ Pages::Pages() {
     // FIXME really here?
     pageList->push_back(new PageHome());
     pageList->push_back(new PageBattery());
+    pageList->push_back(new PageTemperature());
     pageList->push_back(new PageOTA());
 
     page = 0;
@@ -59,11 +61,13 @@ Action actions[] = {
 };
 */
 
+/*
 bool submenu(int8_t press);
 struct Submenu {
     const char **names;
     //Action *actions;
 };
+*/
 
 const char *menuOptions[] = {
     "Play",
