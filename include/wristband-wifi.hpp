@@ -4,6 +4,7 @@
 #include <ESPmDNS.h>
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
+// FIXME: replace with https://hieromon.github.io/AutoConnect?
 #include <WiFiManager.h>
 class TFT;
 #include <ESPAsyncWebServer.h>
