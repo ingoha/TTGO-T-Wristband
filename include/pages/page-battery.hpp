@@ -2,7 +2,7 @@
 #define PAGE_BATTERY_H
 #include "abstractpage.hpp"
 
-class PageBattery : public AbstractPage{
+class PageBattery : public AbstractPage {
   public:
     void draw(bool initialLoad);
     void action();
