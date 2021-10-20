@@ -49,11 +49,12 @@ void PageTemperature::draw(bool initialLoading) {
     if (millis() - timeTemperature > 300) {
         // updateMPU();
         if (pmenu >= 0) {
-            tft->drawBottomBar(getTimeout(), TFT_BLUE);
+            //tft->drawBottomBar(getTimeout(), TFT_BLUE);
         } 
         else {
-            refreshDrawQuaternion(getQuaternion());
+            //tft->refreshDrawQuaternion(mpu->getQuaternion());
             float q[7] = { 0, 0, 0, 0, 0, 0, 0 };
+            mpu->gagewatchRead(q);
             mpu->getDMP(q);
             tft->refreshDrawQuaternion(q);
         }
