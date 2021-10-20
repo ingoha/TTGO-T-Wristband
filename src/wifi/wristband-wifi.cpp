@@ -89,7 +89,7 @@ void WIFI::deactivateWifi() {
 
 void WIFI::startNetwork() {
     Serial.println("Connected, network start.\n");
-    RTC_Date datetime = Network::getInstance()->getNTP()->syncTime());
+    RTC_Date datetime = Network::getInstance()->getNTP()->syncTime();
     if(datetime.year != 0) {
         HAL::getInstance()->getClock()->setTime(datetime);
     }
