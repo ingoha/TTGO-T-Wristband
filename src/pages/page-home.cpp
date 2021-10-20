@@ -59,8 +59,14 @@ void PageHome::action() {
   }
   network->getWIFI()->activateWifi();
   hal->getTFT()->msgInfo("UPDATING TIME...");
-  network->getNTP()->syncTime();
+  RTC_Date datetime = network->getNTP()->syncTime());
+  if(datetime.year != 0) {
+    hal->getClock()->setTime(datetime);
+    hal->getTFT()->msgSuccess("TIME UPDATED");
+  }
+  else {
+    hal->getTFT()->msgError("NTP ERROR");
+  }
   // deactivateWifi();
-  hal->getTFT()->msgSuccess("TIME UPDATED");
   sleep(3);
 }

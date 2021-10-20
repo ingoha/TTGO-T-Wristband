@@ -6,6 +6,9 @@
 class Ntp {
   public:
     Ntp();
+    //
+    // get current date&time from ntp server
+    // returns a data structure; year is set to zero if error
     RTC_Date syncTime();
 };
 #endif

@@ -12,12 +12,18 @@ Ntp::Ntp()
 RTC_Date Ntp::syncTime()
 {
   struct tm timeInfo;
+  bool error = false;
   if (getLocalTime(&timeInfo, 10000)) {
     Serial.println(&timeInfo, "Done: %A, %B %d %Y %H:%M:%S");
   }
-  else Serial.println("Error. Unable to download time from NTP server.");
+  else {
+    Serial.println("Error. Unable to download time from NTP server.");
+    error = true;
   RTC_Date datetime = RTC_Date(timeInfo.tm_year,
     timeInfo.tm_mon, timeInfo.tm_mday,
     timeInfo.tm_hour, timeInfo.tm_min, timeInfo.tm_sec);
+  if(error) {
+    datetime.year = 0;
+  }
   return datetime;
 }
