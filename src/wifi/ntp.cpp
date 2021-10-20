@@ -19,6 +19,7 @@ RTC_Date Ntp::syncTime()
   else {
     Serial.println("Error. Unable to download time from NTP server.");
     error = true;
+  }
   RTC_Date datetime = RTC_Date(timeInfo.tm_year,
     timeInfo.tm_mon, timeInfo.tm_mday,
     timeInfo.tm_hour, timeInfo.tm_min, timeInfo.tm_sec);
