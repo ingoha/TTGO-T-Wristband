@@ -5,15 +5,14 @@
 MPU::MPU()
 {
   IMU = new MPU9250lib();
-  imud = new MPU9250_DMP(); 
 
   byte c = IMU->readByte(MPU9250_ADDRESS, WHO_AM_I_MPU9250);
   if (c == 0x71) {
-    // IMU->initMPU9250();
-    // IMU->initAK8963(IMU->magCalibration);
-    // getMagBiasEEPROM(IMU->magbias);
-    imud->begin();
-    imud->dmpBegin(DMP_FEATURE_PEDOMETER | DMP_FEATURE_6X_LP_QUAT | DMP_FEATURE_GYRO_CAL);
+    IMU->initMPU9250();
+    IMU->initAK8963(IMU->magCalibration);
+    //HAL::getInstance()->getEEPROM()->getMagBiasEEPROM(IMU->magbias);
+    //imud->begin();
+    //imud->dmpBegin(DMP_FEATURE_PEDOMETER | DMP_FEATURE_6X_LP_QUAT | DMP_FEATURE_GYRO_CAL);
   }
 }
 
@@ -195,15 +194,10 @@ void MPU::gagewatchRead(float *q) {
     IMU->yaw   -= 8.5;
     IMU->roll  *= RAD_TO_DEG;
 
-  /*
     q[4] = IMU->yaw;
     q[5] = IMU->pitch;
     q[6] = IMU->roll;
-  */
-    q[4] = imud->yaw;
-    q[5] = imud->pitch;
-    q[6] = imud->roll;
-
+  
     IMU->count = millis();
     IMU->sumCount = 0;
     IMU->sum = 0;
@@ -212,17 +206,33 @@ void MPU::gagewatchRead(float *q) {
 }
 
 void MPU::updateDMP() {
+  /*
     if (imud->fifoAvailable()) {
         if (imud->dmpUpdateFifo() == INV_SUCCESS) {
             imud->computeEulerAngles();
         }
     }
+    */
 }
 
 void MPU::getDMP(float *q) {
+  /*
     q[4] = imud->yaw;
     q[5] = imud->pitch;
     q[6] = imud->roll;
+    */
+}
+
+const float MPU::getYaw() {
+  return IMU->yaw;
+}
+
+const float MPU::getRoll() {
+  return IMU->roll;
+}
+
+const float MPU::getPitch() {
+  return IMU->pitch;
 }
 
 void MPU::imuSleep() {

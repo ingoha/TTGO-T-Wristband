@@ -35,8 +35,14 @@ class MPU {
 
     void gagewatchRead(float *q);
     void updateDMP();
+    // 4=yaw, 5=pitch, 6=roll
     void getDMP(float *q);
     void imuSleep();
+
+    // convenience functions
+    const float getYaw();
+    const float getPitch();
+    const float getRoll();
 };
 
 #endif

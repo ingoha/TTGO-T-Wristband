@@ -47,18 +47,20 @@ void PageGyro::draw(bool initialLoading) {
         tft->initDrawQuaternion();
         pmenu = -1;
     }
-    mpu->updateDMP();
     if (millis() - timeTemperature > 300) {
-        // updateMPU();
+        mpu->updateMPU();
         if (pmenu >= 0) {
             //tft->drawBottomBar(getTimeout(), TFT_BLUE);
         } 
         else {
-            //tft->refreshDrawQuaternion(mpu->getQuaternion());
             float q[7] = { 0, 0, 0, 0, 0, 0, 0 };
             mpu->gagewatchRead(q);
             mpu->getDMP(q);
             tft->refreshDrawQuaternion(q);
+           char buf[100];
+           sprintf(buf, "yaw: %2f, pitch: %2f, roll %2f", 
+                        mpu->getYaw(), mpu->getPitch(), mpu->getRoll());
+           Serial.println(buf);
         }
         timeTemperature = millis();
     }
