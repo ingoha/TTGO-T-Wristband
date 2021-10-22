@@ -1,4 +1,6 @@
-#include "pages/page-temperature.hpp"
+#include "pages/page-gyro.hpp"
+
+// cf. https://www.seeedstudio.com/blog/2020/06/17/how-to-use-an-mpu9250-accelerometer-and-gyroscope-with-arduino/
 
 #define OPTIONS_TEMPERATURE 6
 
@@ -37,7 +39,7 @@ Action pageActions[] = {
 };
 */
 
-void PageTemperature::draw(bool initialLoading) {
+void PageGyro::draw(bool initialLoading) {
     MPU* mpu = hal->getMPU();
     TFT* tft = hal->getTFT();
     if (initialLoading) {
@@ -62,7 +64,7 @@ void PageTemperature::draw(bool initialLoading) {
     }
 }
 
-void PageTemperature::action() {
+void PageGyro::action() {
   TFT* tft = hal->getTFT();
   tft->msgInfo("Calibrating MPU...");
   hal->getMPU()->calibrateMPU();
@@ -70,7 +72,7 @@ void PageTemperature::action() {
   sleep(5);
 }
 
-bool PageTemperature::submenu(int8_t press) {
+bool PageGyro::submenu(int8_t press) {
     TFT* tft = hal->getTFT();
 
     if (!press && pmenu < 0) { return false; }

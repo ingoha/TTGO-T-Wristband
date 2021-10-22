@@ -7,7 +7,7 @@
 #include "pages/page-home.hpp"
 #include "pages/page-battery.hpp"
 #include "pages/page-ota.hpp"
-#include "pages/page-temperature.hpp"
+#include "pages/page-gyro.hpp"
 #include "pages/page-bearing.hpp"
 #include "sleep.hpp"
 
@@ -22,7 +22,7 @@ Pages::Pages() {
     // FIXME really here?
     pageList->push_back(new PageHome());
     pageList->push_back(new PageBattery());
-    pageList->push_back(new PageTemperature());
+    pageList->push_back(new PageGyro());
     pageList->push_back(new PageBearing());
     pageList->push_back(new PageOTA());
 
