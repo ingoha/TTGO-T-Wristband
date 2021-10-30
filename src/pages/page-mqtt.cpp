@@ -11,7 +11,11 @@ void PageMqtt::draw(bool initialLoading)
   TFT* tft = hal->getTFT();
   if (initialLoading)
   {
-    //tft->initDrawTemperature();
+    tft->initDrawTemperature();
+  }
+  else
+  {
+    tft->refreshDrawTemperature(co2);
   }
 }
 
@@ -20,5 +24,9 @@ void PageMqtt::action() {
 
 void PageMqtt::onMessage(String topic, String payload)
 {
-  Serial.println("ppm: " + payload);
+  if(topic == "co2ampel/ppm") {
+    Serial.println("ppm: " + payload);
+    co2 = payload.toInt();
+  }
+  
 }

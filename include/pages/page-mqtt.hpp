@@ -9,8 +9,8 @@ class PageMqtt : public AbstractPage, AbstractMqttSubscriber {
     uint8_t requests = 0;
 
     // stored values from bus
-    int co2;
-    float temperature;
+    uint32_t co2 = 0;
+    float temperature = 0.0;
     //...
 
   public:
