@@ -4,6 +4,7 @@
 
 MQTT::MQTT() {
   mqttClient = new AsyncMqttClient();
+  //subscribers = new vector<AbstractMqttSubscriber>();
 }
 
 void MQTT::MQTTstatus(const char *payload) {
@@ -25,6 +26,9 @@ void MQTT::onConnect(bool session) {
   mqttClient->subscribe("watch/#", 2);
   mqttClient->subscribe("appointments/#", 2);
   mqttClient->subscribe("today/#", 2);
+  for (std::pair<String, AbstractMqttSubscriber*> element : subscribers) {
+    mqttClient->subscribe(element.first.c_str(), 2);
+  }
   // status("Connected.", 0);
   Serial.println("[MQTT] Subscribed.");
   RTC_Date now = HAL::getInstance()->getClock()->getClockTime();
@@ -53,6 +57,13 @@ void MQTT::onMessage(char *topic, char *opayload,
   }
   static uint8_t n = 0;
   TFT* tft = HAL::getInstance()->getTFT();
+
+  // notify subscribers
+  if(subscribers.find(topic) != subscribers.end()) {
+    // FIXME what about multiple subscribers for one topic?
+    subscribers[topic]->onMessage(topic, payload);
+    Serial.println("[MQTT] Relaying message");
+  }
   /*
   if (strstr(topic, "appointment")) {
     if (payload[0] == ' ') {
@@ -99,3 +110,10 @@ void MQTT::MQTTinit() {
 }
 
 void MQTT::MQTTconnect() { mqttClient->connect(); }
+
+void MQTT::subscribe(AbstractMqttSubscriber* subscriber, String topic) {
+  mqttClient->subscribe(topic.c_str(), 2);
+  // FIXME what about multiple subscribers for one topic?
+  subscribers.insert(std::pair<String,AbstractMqttSubscriber*>(topic, subscriber));
+  Serial.println("[MQTT] subscriber added - topic: " + topic);
+}
