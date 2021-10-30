@@ -56,41 +56,13 @@ void MQTT::onMessage(char *topic, char *opayload,
       saveStatus(payload);
   }
   static uint8_t n = 0;
-  TFT* tft = HAL::getInstance()->getTFT();
-
+  
   // notify subscribers
   if(subscribers.find(topic) != subscribers.end()) {
     // FIXME what about multiple subscribers for one topic?
     subscribers[topic]->onMessage(topic, payload);
     Serial.println("[MQTT] Relaying message");
   }
-  /*
-  if (strstr(topic, "appointment")) {
-    if (payload[0] == ' ') {
-      n = 0;
-    }
-    if (payload[0] == 'U') {
-      tft->drawAppointments();
-    }
-    if (payload[0] == 'T' && len > 14) {
-        uint8_t hfrom = (payload[1] - '0') * 10 + payload[2] - '0';
-        uint8_t mfrom = (payload[4] - '0') * 10 + payload[5] - '0';
-        uint8_t hto   = (payload[7] - '0') * 10 + payload[8] - '0';
-        uint8_t mto   = (payload[10] - '0') * 10 + payload[11] - '0';
-        char* place = strtok((payload+13), "//");
-        if (place) {
-            saveAppointment(n > 3 ? 3 : n, strtok(NULL, "//"), place, hfrom, mfrom, hto, mto);
-        } else {
-            saveAppointment(n > 3 ? 3 : n, (payload+13), "-", hfrom, mfrom, hto, mto);
-        }
-        n++;
-    } else if (len > 1) {
-        saveAppointment(n > 3 ? 3 : n, payload, "-", 0, 0, 23, 59);
-    }
-    return;
-  }
-  */
-  tft->status(payload, index);
 }
 
 void MQTT::MQTTinit() {
