@@ -7,7 +7,6 @@
 #include <rom/rtc.h>
 #include "MPU9250.hpp"
 
-#include "SparkFunMPU9250-DMP.h"
 
 class MPU {
   private:
@@ -16,7 +15,6 @@ class MPU {
     const byte ACCEL_CALIBRATION_BASE_ADDRESS = 0x30;
 
     MPU9250lib* IMU;
-    MPU9250_DMP* imud; 
 
     float aBias[3]; float gBias[3]; float mCal[3];
     uint32_t lastUpdate = 0;
