@@ -1,7 +1,12 @@
 #include "pages/page-mqtt.hpp"
-#include
+#include "hal.hpp"
 
-void PageMQTT::draw(bool initialLoading)
+PageMqtt::PageMqtt()
+{
+  network->getMQTT()->subscribe(this, "co2ampel/ppm");
+}
+
+void PageMqtt::draw(bool initialLoading)
 {
   TFT* tft = hal->getTFT();
   if (initialLoading)
@@ -11,4 +16,9 @@ void PageMQTT::draw(bool initialLoading)
 }
 
 void PageMqtt::action() {
+}
+
+void PageMqtt::onMessage(String topic, String payload)
+{
+  Serial.println("ppm: " + payload);
 }

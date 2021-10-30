@@ -9,6 +9,7 @@
 #include "pages/page-ota.hpp"
 #include "pages/page-gyro.hpp"
 #include "pages/page-bearing.hpp"
+#include "pages/page-mqtt.hpp"
 #include "sleep.hpp"
 
 Pages::Pages() {
@@ -25,6 +26,7 @@ Pages::Pages() {
     pageList->push_back(new PageGyro());
     pageList->push_back(new PageBearing());
     pageList->push_back(new PageOTA());
+    pageList->push_back(new PageMqtt());
 
     page = 0;
     showPage();

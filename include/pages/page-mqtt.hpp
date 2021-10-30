@@ -3,7 +3,7 @@
 #include <Arduino.h>
 #include "pages/abstractpage.hpp"
 
-class PageMqtt : public AbstractPage {
+class PageMqtt : public AbstractPage, AbstractMqttSubscriber {
   private:
     uint32_t timeBearing = millis();
     uint8_t requests = 0;
@@ -14,7 +14,9 @@ class PageMqtt : public AbstractPage {
     //...
 
   public:
+    PageMqtt();
     void draw(bool initialLoading);
     void action();
+    void onMessage(String topic, String payload);
 };
 #endif
