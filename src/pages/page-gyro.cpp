@@ -2,6 +2,8 @@
 
 // cf. https://www.seeedstudio.com/blog/2020/06/17/how-to-use-an-mpu9250-accelerometer-and-gyroscope-with-arduino/
 
+#include <SparkFunMPU9250-DMP.h>
+
 #define OPTIONS_TEMPERATURE 6
 
 const char *options[OPTIONS_TEMPERATURE + 1] = {
@@ -40,6 +42,7 @@ Action pageActions[] = {
 */
 
 void PageGyro::draw(bool initialLoading) {
+    
     MPU* mpu = hal->getMPU();
     TFT_eSPI* tft = hal->getTFT()->getInternalTFT();
     if (initialLoading) {
@@ -55,8 +58,9 @@ void PageGyro::draw(bool initialLoading) {
         tft->drawString("R = ", 6, 130, 2);
         pmenu = -1;
     }
-    if (millis() - timeTemperature > 300) {
-        mpu->readMPU9250();
+    else {
+        if (millis() - timeTemperature > 300) {
+        mpu->update();
         if (pmenu >= 0) {
             //tft->drawBottomBar(getTimeout(), TFT_BLUE);
         } 
@@ -92,12 +96,13 @@ void PageGyro::draw(bool initialLoading) {
         }
         timeTemperature = millis();
     }
+    }
 }
 
 void PageGyro::action() {
   TFT* tft = hal->getTFT();
   tft->msgInfo("Calibrating MPU...");
-  hal->getMPU()->calibrateMPU();
+  //hal->getMPU()->calibrateMPU();
   tft->msgInfo("MPU calibrated.");
   sleep(5);
 }
