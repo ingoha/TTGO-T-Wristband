@@ -2,7 +2,10 @@
 #include "hal.hpp"
 #include "pins.hpp"
 
-// cf. https://learn.sparkfun.com/tutorials/9dof-razor-imu-m0-hookup-guide#using-the-mpu-9250-dmp-arduino-library
+
+//
+// FIXME:
+//  * calibrate magnetometer and store offsets in EEPROM (cf. https://github.com/asukiaaa/MPU9250_asukiaaa/blob/master/examples/GetMagOffset/GetMagOffset.ino)
 
 MPU::MPU(TwoWire* wire)
 {
