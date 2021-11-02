@@ -3,6 +3,8 @@
 #include "abstractpage.hpp"
 
 class PageBattery : public AbstractPage {
+  private:
+    float old_voltage = 0.0;
   public:
     void draw(bool initialLoad);
     void action();

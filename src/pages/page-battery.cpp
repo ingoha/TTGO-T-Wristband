@@ -3,13 +3,14 @@
 
 void PageBattery::draw(bool initialLoad)
 {
-  if (initialLoad)
+  Battery* bat = hal->getBattery();
+  float voltage = bat->getVoltage();
+  if (initialLoad or abs(voltage - old_voltage) > 0.1)
   {
     // deactivateWifi();
-    Battery* bat = hal->getBattery();
-    float voltage = bat->getVoltage();
     hal->getTFT()->drawBattery(
       voltage, bat->calcPercentage(voltage), bat->isCharging());
+    old_voltage = voltage;
   }
 }
 
