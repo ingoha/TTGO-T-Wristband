@@ -21,9 +21,9 @@ Pages::Pages() {
     
     pageList = new std::vector<AbstractPage*>();
     // FIXME really here?
+    pageList->push_back(new PageGyro());
     pageList->push_back(new PageHome());
     pageList->push_back(new PageBattery());
-    pageList->push_back(new PageGyro());
     pageList->push_back(new PageBearing());
     pageList->push_back(new PageOTA());
     pageList->push_back(new PageMqtt());

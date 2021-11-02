@@ -34,9 +34,6 @@ void setup() {
   debug("Startup...");
   setCpuFrequencyMhz(80);
   debug("Setup Wire...");
-  // FIXME Wire must be global for MPU library :-/
-  Wire.begin(I2C_SDA_PIN, I2C_SCL_PIN);
-  Wire.setClock(400000);
   debug("Setup HAL...");
   HAL* hal = HAL::getInstance();
 

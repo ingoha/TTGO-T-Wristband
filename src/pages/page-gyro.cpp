@@ -2,8 +2,6 @@
 
 // cf. https://www.seeedstudio.com/blog/2020/06/17/how-to-use-an-mpu9250-accelerometer-and-gyroscope-with-arduino/
 
-#include <SparkFunMPU9250-DMP.h>
-
 #define OPTIONS_TEMPERATURE 6
 
 const char *options[OPTIONS_TEMPERATURE + 1] = {

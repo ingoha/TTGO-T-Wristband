@@ -5,37 +5,27 @@
 #include <Wire.h>
 #include <EEPROM.h>
 #include <rom/rtc.h>
-#include "MPU9250.hpp"
-
+#include "mpu9250.h"
 
 class MPU {
   private:
-    const byte GYRO_CALIBRATION_BASE_ADDRESS = 0x10;
-    const byte MAG_CALIBRATION_BASE_ADDRESS = 0x20;
-    const byte ACCEL_CALIBRATION_BASE_ADDRESS = 0x30;
-
-    MPU9250lib* IMU;
-
-    float aBias[3]; float gBias[3]; float mCal[3];
-    uint32_t lastUpdate = 0;
+    Mpu9250* imu;
 
   public:
     //void initMPU();
-    MPU();
+    MPU(TwoWire* wire);
     const int16_t getBearing();
     int calibrateBearing();
     void calibrateGyro();
     void mpuSleep();
     const float getTemperature();
     const float *getQuaternion();
-    void updateMPU();
-    void calibrateMPU();
+    void update();
+    void calibrate();
 
-    void gagewatchRead(float *q);
-    void updateDMP();
     // 4=yaw, 5=pitch, 6=roll
     void getDMP(float *q);
-    void imuSleep();
+    void sleep();
 
     // convenience functions
     const float getYaw();
