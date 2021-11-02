@@ -31,6 +31,9 @@ class MPU {
     const float getYaw();
     const float getPitch();
     const float getRoll();
+    const float getMagX();
+    const float getMagY();
+    const float getMagZ();
 };
 
 #endif

@@ -12,10 +12,15 @@ void PageBearing::draw(bool initialLoading)
   if (millis() - timeBearing > 300)
   {
     MPU* mpu = hal->getMPU();
+    mpu->update();
     tft->refreshDrawBearing(mpu->getBearing());
     timeBearing = millis();
     float temperature = mpu->getTemperature();
     tft->refreshDrawTemperature(temperature);
+    char buf[100];
+    sprintf(buf, "magX: %2f, magY: %2f, magZ: %2f", 
+                        mpu->getMagX(), mpu->getMagY(), mpu->getMagZ());
+    Serial.println(buf);
   }
 }
 

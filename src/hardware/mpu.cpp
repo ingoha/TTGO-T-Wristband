@@ -6,6 +6,7 @@
 //
 // FIXME:
 //  * calibrate magnetometer and store offsets in EEPROM (cf. https://github.com/asukiaaa/MPU9250_asukiaaa/blob/master/examples/GetMagOffset/GetMagOffset.ino)
+//  * sleep (incl. INT wakeup)
 
 MPU::MPU(TwoWire* wire)
 {
@@ -97,6 +98,18 @@ const float MPU::getRoll() {
 
 const float MPU::getPitch() {
   return imu->gyro_z_radps();
+}
+
+const float MPU::getMagX() {
+  return imu->mag_x_ut();
+}
+
+const float MPU::getMagY() {
+  return imu->mag_y_ut();
+}
+
+const float MPU::getMagZ() {
+  return imu->mag_z_ut();
 }
 
 /*
