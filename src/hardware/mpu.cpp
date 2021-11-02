@@ -2,7 +2,6 @@
 #include "hal.hpp"
 #include "pins.hpp"
 
-
 //
 // FIXME:
 //  * calibrate magnetometer and store offsets in EEPROM (cf. https://github.com/asukiaaa/MPU9250_asukiaaa/blob/master/examples/GetMagOffset/GetMagOffset.ino)
