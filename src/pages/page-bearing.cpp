@@ -18,8 +18,9 @@ void PageBearing::draw(bool initialLoading)
     float temperature = mpu->getTemperature();
     tft->refreshDrawTemperature(temperature);
     char buf[100];
+    MPU::xyz mag = mpu->getMag();
     sprintf(buf, "magX: %2f, magY: %2f, magZ: %2f", 
-                        mpu->getMagX(), mpu->getMagY(), mpu->getMagZ());
+                    mag.x, mag.y, mag.z);
     Serial.println(buf);
   }
 }

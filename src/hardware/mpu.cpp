@@ -69,25 +69,6 @@ const float MPU::getTemperature()
   return imu->die_temperature_c();
 }
 
-
-/*
-void MPU::updateDMP() {
-    if (imud->fifoAvailable()) {
-        if (imud->dmpUpdateFifo() == INV_SUCCESS) {
-            imud->computeEulerAngles();
-        }
-    }
-}
-*/
-
-void MPU::getDMP(float *q) {
-  /*
-    q[4] = imud->yaw;
-    q[5] = imud->pitch;
-    q[6] = imud->roll;
-    */
-}
-
 const float MPU::getYaw() {
   return imu->gyro_x_radps();;
 }
@@ -100,16 +81,28 @@ const float MPU::getPitch() {
   return imu->gyro_z_radps();
 }
 
-const float MPU::getMagX() {
-  return imu->mag_x_ut();
+const MPU::xyz MPU::getMag() {
+  xyz mag;
+  mag.x = imu->mag_x_ut();
+  mag.y = imu->mag_y_ut();
+  mag.z = imu->mag_z_ut();
+  return mag;
 }
 
-const float MPU::getMagY() {
-  return imu->mag_y_ut();
+const MPU::xyz MPU::getGyro() {
+  xyz gyro;
+  gyro.x = imu->gyro_x_radps();
+  gyro.y = imu->gyro_y_radps();
+  gyro.z = imu->gyro_z_radps();
+  return gyro;
 }
 
-const float MPU::getMagZ() {
-  return imu->mag_z_ut();
+const MPU::xyz MPU::getAccel() {
+  xyz accel;
+  accel.x = imu->accel_x_mps2();
+  accel.y = imu->accel_y_mps2();
+  accel.z = imu->accel_z_mps2();
+  return accel;
 }
 
 /*

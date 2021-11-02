@@ -76,9 +76,11 @@ void PageGyro::draw(bool initialLoading) {
             char syaw[8] = "";
             char spitch[8] = "";
             char sroll[8] = "";
-            sprintf(qx, "%5.1f", mpu->getMagX());
-            sprintf(qy, "%5.1f", mpu->getMagY());
-            sprintf(qz, "%5.1f", mpu->getMagZ());
+            MPU::xyz mag = mpu->getMag();
+            sprintf(qx, "%5.1f", mag.x);
+            sprintf(qy, "%5.1f", mag.y);
+            sprintf(qz, "%5.1f", mag.z);
+
             sprintf(syaw, "%5.1f", mpu->getYaw());
             sprintf(spitch, "%5.1f", mpu->getPitch());
             sprintf(sroll, "%5.1f", mpu->getRoll());

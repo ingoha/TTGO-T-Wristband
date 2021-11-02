@@ -15,25 +15,37 @@ class MPU {
     //void initMPU();
     MPU(TwoWire* wire);
     const int16_t getBearing();
-    int calibrateBearing();
+    void calibrate();
     void calibrateGyro();
+    int calibrateBearing();
     void mpuSleep();
     const float getTemperature();
-    const float *getQuaternion();
+    // call this method before accessing values
     void update();
-    void calibrate();
 
-    // 4=yaw, 5=pitch, 6=roll
-    void getDMP(float *q);
     void sleep();
+
+    typedef struct XYZ
+    {
+      float x = 0.0;
+      float y = 0.0;
+      float z = 0.0;
+    } xyz;
 
     // convenience functions
     const float getYaw();
     const float getPitch();
     const float getRoll();
-    const float getMagX();
-    const float getMagY();
-    const float getMagZ();
+    // get magnetometer data
+    // remember to call update() before
+    const xyz getMag();
+    // get accel data
+    // remember to call update() before
+    const xyz getAccel();
+    // get gyro data
+    // remember to call update() before
+    const xyz getGyro();
+
 };
 
 #endif
