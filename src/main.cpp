@@ -64,4 +64,5 @@ void loop() {
     pages->refreshTimer();
   }
   pages->handleUi();
+  HAL::getInstance()->getMPU()->updateFilter();
 }

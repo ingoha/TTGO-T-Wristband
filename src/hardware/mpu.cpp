@@ -21,12 +21,74 @@ MPU::MPU(TwoWire* wire)
     }
   }
   Serial.println("MPU9250 is online...");
+
+  setupFilter();
 }
 
+void MPU::setupFilter()
+{
+  filter = new Madgwick();
+  filter->begin(sampleRateHz);
+  // configuration for AHRS filter
+  imu->ConfigAccelRange(Mpu9250::ACCEL_RANGE_2G);
+  imu->ConfigGyroRange(Mpu9250::GYRO_RANGE_250DPS);
 
-void MPU::update() {
-  imu->Read();
+  // initialize variables to pace updates to correct rate
+  microsPerReading = 1000000 / sampleRateHz;
+  microsPrevious = micros();
 }
+
+void MPU::updateFilter()
+{
+  if(!filterEnabled)
+    return;
+
+  float ax, ay, az;
+  float gx, gy, gz;
+  float roll, pitch, heading;
+  unsigned long microsNow;
+
+  // check if it's time to read data and update the filter
+  microsNow = micros();
+  if (microsNow - microsPrevious >= microsPerReading) {
+
+    // read data from MP9250
+    update();
+
+    ax = imu->accel_x_mps2();
+    ay = imu->accel_y_mps2();
+    az = imu->accel_z_mps2();
+    gx = imu->gyro_x_radps();
+    gy = imu->gyro_y_radps();
+    gz = imu->gyro_z_radps();
+
+    // update the filter, which computes orientation
+    filter->updateIMU(gx, gy, gz, ax, ay, az);
+
+    // print the heading, pitch and roll
+    roll = filter->getRoll();
+    pitch = filter->getPitch();
+    heading = filter->getYaw();
+    Serial.print("Orientation: ");
+    Serial.print(heading);
+    Serial.print(" ");
+    Serial.print(pitch);
+    Serial.print(" ");
+    Serial.println(roll);
+
+    // increment previous time, so we keep proper pace
+   
+    microsPrevious = microsPrevious + microsPerReading;
+  }
+}
+
+void MPU::startFilter() { filterEnabled = true; }
+
+void MPU::stopFilter() { filterEnabled = false; }
+
+const bool MPU::filterRunning() { return filterEnabled; }
+
+void MPU::update() { imu->Read(); }
 
 void MPU::sleep()
 {
@@ -63,22 +125,13 @@ void MPU::calibrate() {
   //IMU->calibrateMPU9250(gBias, aBias);
 }
 
-const float MPU::getTemperature()
-{
-  return imu->die_temperature_c();
-}
+const float MPU::getTemperature() { return imu->die_temperature_c(); }
 
-const float MPU::getYaw() {
-  return imu->gyro_x_radps();;
-}
+const float MPU::getYaw() { return filter->getYaw(); }
 
-const float MPU::getRoll() {
-  return imu->gyro_y_radps();
-}
+const float MPU::getRoll() { return filter->getRoll(); }
 
-const float MPU::getPitch() {
-  return imu->gyro_z_radps();
-}
+const float MPU::getPitch() { return filter->getPitch(); }
 
 const MPU::xyz MPU::getMag() {
   xyz mag;

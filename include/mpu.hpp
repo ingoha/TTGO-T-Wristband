@@ -5,13 +5,29 @@
 #include <Wire.h>
 #include <EEPROM.h>
 #include <rom/rtc.h>
-#include "mpu9250.h"
+#include <mpu9250.h>
+#include <MadgwickAHRS.h>
 
 class MPU {
   private:
     Mpu9250* imu;
+    // cf. https://github.com/arduino-libraries/MadgwickAHRS/blob/master/examples/Visualize101/Visualize101.ino
+    Madgwick* filter;
+    const int sampleRateHz = 25;
+    unsigned long microsPerReading, microsPrevious;
+    float accelScale, gyroScale;
+    void setupFilter();
+    bool filterEnabled = false;
 
   public:
+    // stop AHRS filter
+    void stopFilter();
+    // start AHRS filter
+    void startFilter();
+    // check if AHRS is running
+    const bool filterRunning();
+    // call this method in loop() to run AHRS
+    void updateFilter();
     //void initMPU();
     MPU(TwoWire* wire);
     const int16_t getBearing();

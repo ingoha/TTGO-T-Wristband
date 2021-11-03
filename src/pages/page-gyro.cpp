@@ -42,6 +42,7 @@ Action pageActions[] = {
 void PageGyro::draw(bool initialLoading) {
     
     MPU* mpu = hal->getMPU();
+    mpu->startFilter();
     TFT_eSPI* tft = hal->getTFT()->getInternalTFT();
     if (initialLoading) {
         tft->fillScreen(TFT_BLACK);
