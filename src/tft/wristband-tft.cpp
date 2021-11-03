@@ -1,5 +1,6 @@
 #include "wristband-tft.hpp"
-#include "pages/page-clock.hpp"
+#include "hal.hpp"
+#include "network.hpp"
 
 TFT_eSPI* TFT::getInternalTFT() {
   return tft;

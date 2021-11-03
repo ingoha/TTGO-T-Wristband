@@ -52,9 +52,6 @@ void MQTT::onMessage(char *topic, char *opayload,
   Serial.printf("[MQTT] %s: %s.\n", topic, payload);
   if (strstr(topic, "self")) { return; }
   if (strstr(topic, "reset")) { esp_restart(); return; }
-  if (strstr(topic, "message/store")) {
-      saveStatus(payload);
-  }
   static uint8_t n = 0;
   
   // notify subscribers
