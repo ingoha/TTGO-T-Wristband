@@ -8,5 +8,6 @@ class PageBattery : public AbstractPage {
   public:
     void draw(bool initialLoad);
     void action();
+    const uint16_t timeout();
 };
 #endif

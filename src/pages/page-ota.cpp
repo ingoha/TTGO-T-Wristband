@@ -2,6 +2,8 @@
 #include <Arduino.h>
 #include <TFT_eSPI.h>
 
+const uint16_t PageOTA::timeout() { return 15;}
+
 void PageOTA::draw(bool initialLoad)
 {
   TFT_eSPI* tft = hal->getTFT()->getInternalTFT();
@@ -14,16 +16,16 @@ void PageOTA::draw(bool initialLoad)
     tft->fillScreen(TFT_BLACK);
     tft->drawString("OTA?", tft->width() / 2, 70);
   }
-  if (timeout > 0 && !timeoutDrawn) {
+  if (otaTimeout > 0 && !timeoutDrawn) {
     tft->setFreeFont(&orbitron_light7pt7b);
     tft->setTextColor(TFT_RED, TFT_BLACK);
     tft->setTextDatum(BC_DATUM);
     tft->drawString("TIMEOUT", tft->width() / 2, tft->height() - 10);
     timeoutDrawn = true;
   }
-  if (timeout > 0 && millis() - timeout > 3000) {
+  if (otaTimeout > 0 && millis() - otaTimeout > 3000) {
     tft->fillScreen(TFT_BLACK);
-    timeout = 0;
+    otaTimeout = 0;
     timeoutDrawn = false;
   }
   tft->setFreeFont(NULL);
@@ -87,5 +89,5 @@ void PageOTA::waitOta() {
   }
   */
   wifi -> deactivateWifi();
-  timeout = millis();
+  otaTimeout = millis();
 }

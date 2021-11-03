@@ -1,6 +1,8 @@
 #include "pages/page-home.hpp"
 #include "hal.hpp"
 
+const uint16_t PageHome::timeout() { return 15;}
+
 // was page-clock
 void PageHome::draw(bool initialLoad)
 {  

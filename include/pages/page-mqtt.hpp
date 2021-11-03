@@ -17,6 +17,7 @@ class PageMqtt : public AbstractPage, AbstractMqttSubscriber {
     PageMqtt();
     void draw(bool initialLoading);
     void action();
+    const uint16_t timeout();
     void onMessage(String topic, String payload);
 };
 #endif

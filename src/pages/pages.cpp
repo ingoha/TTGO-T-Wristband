@@ -180,7 +180,7 @@ void Pages::showPage() {
     }
     */
     if (pageList->at(page)) {
-        max_time_out = timeOut[page] * 1000;
+        max_time_out = pageList->at(page)->timeout() * 1000;
         if (max_time_out < 1000) { max_time_out = 10000; }
         pageList->at(page)->draw(cleared || initialLoad);
         initialLoad = false;

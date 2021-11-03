@@ -11,6 +11,7 @@ class PageGyro : public AbstractPage {
   public:
     void draw(bool initialLoad);
     void action();
+    const uint16_t timeout();
     // FIXME add to AbstractPage?
     bool submenu(int8_t press);
 };

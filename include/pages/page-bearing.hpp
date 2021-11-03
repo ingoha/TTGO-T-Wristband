@@ -11,5 +11,6 @@ class PageBearing : public AbstractPage {
   public:
     void draw(bool initialLoading);
     void action();
+    const uint16_t timeout();
 };
 #endif

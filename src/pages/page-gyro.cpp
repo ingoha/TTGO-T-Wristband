@@ -13,6 +13,9 @@ const char *options[OPTIONS_TEMPERATURE + 1] = {
     "WSTECZ",
     NULL
 };
+
+const uint16_t PageGyro::timeout() { return 30;}
+
 /*
 void menuActionTest() {
     HAL::getInstance()->getTFT()->msgInfo("Test");

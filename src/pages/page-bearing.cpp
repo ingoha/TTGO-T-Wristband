@@ -1,5 +1,7 @@
 #include "pages/page-bearing.hpp"
 
+const uint16_t PageBearing::timeout() { return 30;}
+
 void PageBearing::draw(bool initialLoading)
 {
   TFT* tft = hal->getTFT();

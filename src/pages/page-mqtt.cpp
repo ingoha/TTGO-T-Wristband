@@ -1,6 +1,8 @@
 #include "pages/page-mqtt.hpp"
 #include "hal.hpp"
 
+const uint16_t PageMqtt::timeout() { return 60;}
+
 PageMqtt::PageMqtt()
 {
   network->getMQTT()->subscribe(this, "co2ampel/ppm");
